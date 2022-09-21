@@ -70,14 +70,13 @@ public class UserServiceImpl implements UserService {
             log.info("User with email '{}' has been found.", email);
             return true;
         }
-        log.error("User with email '{}' not found.", email);
+        log.info("User with email '{}' not found.", email);
         return false;
     }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         AppUser user = getUser(email);
-        log.info("User with email '{}' has been found.", email);
         return buildUserDetails(user);
     }
 

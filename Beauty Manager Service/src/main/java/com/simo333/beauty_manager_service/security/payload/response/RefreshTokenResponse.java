@@ -4,15 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Set;
-
+@AllArgsConstructor
 @Getter
 @Setter
-@AllArgsConstructor
-public class JWTResponse {
+public class RefreshTokenResponse {
     private String accessToken;
     private String refreshToken;
     private static final String TYPE = "Bearer";
-    private String email;
-    private Set<String> roles;
 }

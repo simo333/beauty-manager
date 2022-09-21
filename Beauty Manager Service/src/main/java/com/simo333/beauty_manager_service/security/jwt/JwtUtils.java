@@ -15,7 +15,7 @@ public class JwtUtils {
 
     @Value("${app.security.token.secret}")
     private String secret;
-    @Value("${app.security.token.expirationMs}") // 24 hours
+    @Value("${app.security.token.expirationMs}") // 1 hour
     private int expirationTime;
 
     public String generateJwtToken(Authentication authentication) {
@@ -26,6 +26,18 @@ public class JwtUtils {
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + expirationTime))
                 .signWith(SignatureAlgorithm.HS512, secret)
+                .compact();
+    }
+
+
+    public String generateJwtToken(User userPrincipal) {
+        return generateTokenFromUserEmail(userPrincipal.getUsername());
+    }
+
+    public String generateTokenFromUserEmail(String email) {
+        return Jwts.builder().setSubject(email)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date((new Date()).getTime() + expirationTime)).signWith(SignatureAlgorithm.HS512, secret)
                 .compact();
     }
 

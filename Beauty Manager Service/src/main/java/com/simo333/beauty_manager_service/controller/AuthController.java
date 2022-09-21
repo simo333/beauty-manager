@@ -1,12 +1,17 @@
 package com.simo333.beauty_manager_service.controller;
 
+import com.simo333.beauty_manager_service.exception.RefreshTokenException;
 import com.simo333.beauty_manager_service.model.AppUser;
+import com.simo333.beauty_manager_service.model.RefreshToken;
 import com.simo333.beauty_manager_service.model.Role;
 import com.simo333.beauty_manager_service.security.jwt.JwtUtils;
 import com.simo333.beauty_manager_service.security.payload.request.LoginRequest;
+import com.simo333.beauty_manager_service.security.payload.request.RefreshTokenRequest;
 import com.simo333.beauty_manager_service.security.payload.request.SignUpRequest;
 import com.simo333.beauty_manager_service.security.payload.response.JWTResponse;
 import com.simo333.beauty_manager_service.security.payload.response.MessageResponse;
+import com.simo333.beauty_manager_service.security.payload.response.RefreshTokenResponse;
+import com.simo333.beauty_manager_service.service.RefreshTokenService;
 import com.simo333.beauty_manager_service.service.RoleServiceImpl;
 import com.simo333.beauty_manager_service.service.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -37,9 +42,10 @@ public class AuthController {
     private final RoleServiceImpl roleService;
     private final JwtUtils jwtUtils;
 
-    @PostMapping("/signin")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+    private final RefreshTokenService refreshTokenService;
 
+    @PostMapping("/login")
+    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
 
@@ -51,12 +57,16 @@ public class AuthController {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toSet());
 
+        RefreshToken refreshToken = refreshTokenService.create(user.getUsername());
+        log.info("New refresh token created for user '{}}'", user.getUsername());
+
         return ResponseEntity.ok(new JWTResponse(accessToken,
+                refreshToken.getToken(),
                 user.getUsername(),
                 roles));
     }
 
-    @PostMapping("/signup")
+    @PostMapping("/register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
         if (userService.existsByEmail(signUpRequest.getEmail())) {
             return ResponseEntity
@@ -71,5 +81,19 @@ public class AuthController {
         userService.save(user);
         log.info("User with email '{}' registered successfully.", user.getEmail());
         return ResponseEntity.ok(new MessageResponse("User registered successfully."));
+    }
+
+    @PostMapping("/refresh-token")
+    public ResponseEntity<?> refreshToken(@Valid @RequestBody RefreshTokenRequest request) {
+        String requestRefreshToken = request.getRefreshToken();
+        RefreshToken refreshToken = refreshTokenService.findByToken(requestRefreshToken);
+        if (refreshTokenService.verifyExpiration(refreshToken)) {
+            String token = jwtUtils.generateTokenFromUserEmail(refreshToken.getUser().getEmail());
+            log.info("Token refreshed successfully.");
+            return ResponseEntity.ok(new RefreshTokenResponse(token, requestRefreshToken));
+        }
+        log.error("Refresh token is not in database. For: {}", requestRefreshToken);
+        throw new RefreshTokenException(requestRefreshToken,
+                "Refresh token has expired.");
     }
 }
