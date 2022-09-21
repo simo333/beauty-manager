@@ -59,7 +59,7 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-<!--            TODO Verify migrating to https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-api-->
+<!--            TODO Migrate to https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-api-->
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt</artifactId>
             <version>0.9.1</version>
