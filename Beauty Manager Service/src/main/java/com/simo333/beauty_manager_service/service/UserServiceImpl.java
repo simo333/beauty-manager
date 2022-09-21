@@ -5,6 +5,7 @@ import com.simo333.beauty_manager_service.model.Role;
 import com.simo333.beauty_manager_service.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -47,7 +48,7 @@ public class UserServiceImpl implements UserService {
     public AppUser getUser(Long userId) {
         AppUser user = userRepository.findById(userId).orElseThrow(() -> {
             log.error("User with id '{}' not found", userId);
-            throw new IllegalArgumentException("User not found.");
+            throw new ResourceNotFoundException("User not found.");
         });
         log.info("User '{}' has been found.", user.getEmail());
         return user;
@@ -57,7 +58,7 @@ public class UserServiceImpl implements UserService {
     public AppUser getUser(String email) {
         AppUser user = userRepository.findByEmail(email).orElseThrow(() -> {
             log.error("User with email '{}' not found", email);
-            throw new IllegalArgumentException("User not found.");
+            throw new ResourceNotFoundException("User not found.");
         });
         log.info("User '{}' has been found.", user.getEmail());
         return user;

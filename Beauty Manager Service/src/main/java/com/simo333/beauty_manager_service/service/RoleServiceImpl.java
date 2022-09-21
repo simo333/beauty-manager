@@ -4,6 +4,7 @@ import com.simo333.beauty_manager_service.model.Role;
 import com.simo333.beauty_manager_service.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,17 +28,17 @@ public class RoleServiceImpl implements RoleService {
     public Role getRole(Long roleId) {
         Role role = roleRepository.findById(roleId).orElseThrow(() -> {
             log.error("Role with id '{}' not found", roleId);
-            throw new IllegalArgumentException("Role not found. For id " + roleId);
+            throw new ResourceNotFoundException("Role not found. For id " + roleId);
         });
         log.info("Role '{}' has been found.", role.getName());
         return role;
     }
 
     @Override
-    public Role getRole(String roleName) {
+    public Role getRole(Role.Type roleName) {
         Role role = roleRepository.findByName(roleName).orElseThrow(() -> {
             log.error("Role with name '{}' not found", roleName);
-            throw new IllegalArgumentException("Role not found. For name " + roleName);
+            throw new ResourceNotFoundException("Role not found. For name " + roleName);
         });
         log.info("Role '{}' has been found.", role.getName());
         return role;

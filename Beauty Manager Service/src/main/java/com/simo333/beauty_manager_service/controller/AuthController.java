@@ -66,7 +66,7 @@ public class AuthController {
         // Create new user's account
         AppUser user = new AppUser(null, signUpRequest.getEmail(),
                 signUpRequest.getPassword(),
-                Set.of(roleService.getRole(Role.Roles.ROLE_USER.name())));
+                Set.of(roleService.getRole(Role.Type.ROLE_USER)));
 
         userService.save(user);
         log.info("User with email '{}' registered successfully.", user.getEmail());

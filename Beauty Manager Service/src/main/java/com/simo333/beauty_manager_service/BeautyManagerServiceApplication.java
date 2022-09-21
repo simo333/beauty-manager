@@ -21,8 +21,8 @@ public class BeautyManagerServiceApplication {
     @Bean
     CommandLineRunner run(UserService userService, RoleService roleService) {
         return args -> {
-            roleService.save(new Role(null, Role.Roles.ROLE_USER));
-            roleService.save(new Role(null, Role.Roles.ROLE_ADMIN));
+            roleService.save(new Role(null, Role.Type.ROLE_USER));
+            roleService.save(new Role(null, Role.Type.ROLE_ADMIN));
 
             userService.save(new AppUser(null, "john@mail.com", "12345678", new HashSet<>()));
             userService.save(new AppUser(null, "jim@mail.com", "12345678", new HashSet<>()));
