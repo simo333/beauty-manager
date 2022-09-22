@@ -11,7 +11,7 @@ import java.time.ZonedDateTime;
 @Setter
 public class ExceptionResponse {
     private final HttpStatus httpStatus;
-    private final ZonedDateTime timeStamp = ZonedDateTime.now(ZoneId.of("Europe/Warsaw")); // Fix timezone
+    private final ZonedDateTime timeStamp = ZonedDateTime.now(ZoneId.of("Europe/Warsaw"));
     private final String message;
     private final String description;
 
