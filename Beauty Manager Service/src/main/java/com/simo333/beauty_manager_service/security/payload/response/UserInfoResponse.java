@@ -9,10 +9,8 @@ import java.util.Set;
 @Getter
 @Setter
 @AllArgsConstructor
-public class JWTResponse {
-    private String accessToken;
-    private String refreshToken;
-    private static final String TYPE = "Bearer";
+public class UserInfoResponse {
     private String email;
     private Set<String> roles;
 }
+
