@@ -5,6 +5,8 @@ import com.simo333.beauty_manager_service.model.Role;
 import com.simo333.beauty_manager_service.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -15,7 +17,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -30,6 +31,7 @@ public class UserServiceImpl implements UserService {
     private final RoleService roleService;
     private final PasswordEncoder passwordEncode;
 
+
     @Transactional
     @Override
     public AppUser save(AppUser user) {
@@ -39,16 +41,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<AppUser> getAll() {
+    public Page<AppUser> getAll(Pageable page) {
         log.info("Fetching all users");
-        return userRepository.findAll();
+        return userRepository.findAll(page);
     }
 
     @Override
     public AppUser getUser(Long userId) {
         AppUser user = userRepository.findById(userId).orElseThrow(() -> {
             log.error("User with id '{}' not found", userId);
-            throw new ResourceNotFoundException("User not found.");
+            throw new ResourceNotFoundException("User not found. For id " + userId);
         });
         log.info("User '{}' has been found.", user.getEmail());
         return user;
@@ -67,10 +69,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean existsByEmail(String email) {
         if (userRepository.existsByEmail(email)) {
-            log.info("Email '{}' is not taken yet.", email);
+            log.info("Email '{}' is already taken.", email);
             return true;
         }
-        log.info("Email '{}' is already taken.", email);
+        log.info("Email '{}' is not taken yet.", email);
         return false;
     }
 
