@@ -6,7 +6,7 @@ import org.springframework.data.domain.Pageable;
 
 public interface ClientService {
 
-    Page<Client> getAllByPage(Pageable page);
+    Page<Client> getClientsPage(Pageable page);
 
     Client save(Client client);
 

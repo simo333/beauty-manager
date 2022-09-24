@@ -19,7 +19,7 @@ public class ClientServiceImpl implements ClientService {
     private final ClientRepository repository;
 
     @Override
-    public Page<Client> getAllByPage(Pageable page) {
+    public Page<Client> getClientsPage(Pageable page) {
         log.info("Fetching Clients. Page: {}", page);
         return repository.findAll(page);
     }

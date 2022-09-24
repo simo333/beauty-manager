@@ -6,6 +6,7 @@ import com.simo333.beauty_manager_service.model.RefreshToken;
 import com.simo333.beauty_manager_service.repository.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +22,12 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     @Value("${app.security.refresh-token.expirationMs}")
     private Long refreshTokenDurationMs;
     private final RefreshTokenRepository refreshTokenRepository;
-    private final UserService userService;
+    private UserService userService;
+
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
 
     @Transactional(readOnly = true)
     public RefreshToken findByToken(String token) {
