@@ -25,7 +25,7 @@ public class ClientController {
     @Secured("ROLE_ADMIN")
     @GetMapping
     public ResponseEntity<Page<Client>> getClientsPage(Pageable page) {
-        Page<Client> clients = clientService.getAllByPage(page);
+        Page<Client> clients = clientService.getClientsPage(page);
         return new ResponseEntity<>(clients, HttpStatus.OK);
     }
 
@@ -45,7 +45,7 @@ public class ClientController {
     @PutMapping("/{id}")
     public ResponseEntity<Client> updateClient(@PathVariable Long id, @RequestBody @Valid Client client) {
         client.setId(id);
-        Client updated = clientService.save(client);
+        Client updated = clientService.update(client);
         return new ResponseEntity<>(updated, HttpStatus.OK);
     }
 
