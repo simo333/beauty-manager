@@ -53,9 +53,9 @@ public class UserController {
     }
 
     @Secured("ROLE_USER")
-    @PatchMapping("/{id}")
-    public ResponseEntity<AppUser> patchUser(@PathVariable Long id, @RequestBody @Valid AppUserPatch patch) {
-        AppUser updated = userService.update(id, patch);
+    @PatchMapping
+    public ResponseEntity<AppUser> patchUser(@RequestBody @Valid AppUserPatch patch) {
+        AppUser updated = userService.patch(patch);
         return new ResponseEntity<>(updated, HttpStatus.OK);
     }
 

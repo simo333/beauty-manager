@@ -20,7 +20,7 @@ public interface UserService extends UserDetailsService {
 
     AppUser update(AppUser user);
 
-    AppUser update(Long id, AppUserPatch patch);
+    AppUser patch(AppUserPatch patch);
 
     void deleteById(long userId);
 

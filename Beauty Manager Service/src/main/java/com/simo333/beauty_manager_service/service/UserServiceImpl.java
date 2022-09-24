@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -104,8 +105,9 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public AppUser update(Long id, AppUserPatch patch) {
-        AppUser user = getUser(id);
+    public AppUser patch(AppUserPatch patch) {
+        User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        AppUser user = getUser(principal.getUsername());
         Set<String> changes = new HashSet<>();
         if(patch.getPassword() != null) {
             user.setPassword(passwordEncode.encode(patch.getPassword()));
@@ -155,4 +157,5 @@ public class UserServiceImpl implements UserService {
                 user.getPassword(),
                 authorities);
     }
+
 }
