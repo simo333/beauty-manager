@@ -12,7 +12,6 @@ export class AppComponent {
   private roles: string[] = [];
   isLoggedIn = false;
   showAdminBoard = false;
-  showModeratorBoard = false;
   email?: string;
 
   constructor(private storageService: StorageService, private authService: AuthService) { }
@@ -25,23 +24,20 @@ export class AppComponent {
       this.roles = user.roles;
 
       this.showAdminBoard = this.roles.includes('ROLE_ADMIN');
-      this.showModeratorBoard = this.roles.includes('ROLE_MODERATOR');
-
       this.email = user.email;
     }
   }
 
-  logout(): void {
+  public logout(): void {
     this.authService.logout().subscribe({
       next: res => {
         console.log(res);
-        this.storageService.clean();
-
-        window.location.reload();
       },
       error: err => {
         console.log(err);
       }
     });
+    this.storageService.clean();
+    console.log("Storages cleaned. User signed out.");
   }
 }

@@ -67,10 +67,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean existsByEmail(String email) {
         if (userRepository.existsByEmail(email)) {
-            log.info("User with email '{}' has been found.", email);
+            log.info("Email '{}' is not taken yet.", email);
             return true;
         }
-        log.info("User with email '{}' not found.", email);
+        log.info("Email '{}' is already taken.", email);
         return false;
     }
 

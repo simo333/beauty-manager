@@ -1,4 +1,4 @@
-<div class="col-md-12">
+<div class="col-md-6">
   <div class="card card-container">
     <img
       id="profile-img"
@@ -38,13 +38,13 @@
           [(ngModel)]="form.password"
           required
           minlength="8"
-          maxlength="8"
+          maxlength="120"
           #password="ngModel"
           [ngClass]="{ 'is-invalid': f.submitted && password.errors }"
         />
         <div *ngIf="password.errors && f.submitted" class="invalid-feedback">
           <div *ngIf="password.errors['required']">Password is required</div>
-          <div *ngIf="password.errors['minlength']">Password must be at least 6 characters</div>
+          <div *ngIf="password.errors['minlength']">Password must be at least 8 characters</div>
           <div *ngIf="password.errors['maxlength']">Password must be at most 120 characters</div>
         </div>
       </div>
