@@ -1,6 +1,7 @@
 # Beauty Manager
 
-Application that helps managing company from beauty industry.
+Application that helps managing company from beauty industry. 
+**Back-end side repository.**
 
 ### FEATURES:
 * Sign up and sign in users
