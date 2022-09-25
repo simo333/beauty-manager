@@ -5,22 +5,20 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 @Entity
-@Table(name = "roles")
+@Table(name = "treatment_categories")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Role {
+public class TreatmentCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(unique = true)
-    @Enumerated(EnumType.STRING)
-    private Type name;
-
-    public enum Type {
-        ROLE_USER,
-        ROLE_ADMIN
-    }
+    @NotBlank
+    @Size(min = 3, max = 100)
+    private String name;
 }

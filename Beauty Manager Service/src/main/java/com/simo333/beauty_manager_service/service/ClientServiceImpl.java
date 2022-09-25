@@ -20,7 +20,7 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public Page<Client> getClientsPage(Pageable page) {
-        log.info("Fetching Clients. Page: {}", page);
+        log.info("Fetching Clients. {}", page);
         return repository.findAll(page);
     }
 
@@ -62,7 +62,7 @@ public class ClientServiceImpl implements ClientService {
     @Transactional
     @Override
     public void deleteById(Long clientId) {
-        log.info("Deleting user with id '{}'", clientId);
+        log.info("Deleting client with id '{}'", clientId);
         repository.deleteById(clientId);
     }
 

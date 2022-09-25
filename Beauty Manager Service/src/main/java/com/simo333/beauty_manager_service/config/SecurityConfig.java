@@ -34,14 +34,14 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, AuthEntryPointJwt unauthorizedHandler, UserService userService) throws Exception {
+        String[] permitAllPaths = {"/api/test/**", "/api/clients/**", "/api/categories/**", "/api/treatments/**"};
         http.cors().configurationSource(corsConfiguration());
         http.csrf().disable()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests().antMatchers("/api/auth/**").permitAll()
-                .antMatchers("/api/test/**", "/api/clients/**").permitAll()
+                .antMatchers(permitAllPaths).permitAll()
                 .anyRequest().authenticated();
-
 
         http.authenticationProvider(authenticationProvider(userService));
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);

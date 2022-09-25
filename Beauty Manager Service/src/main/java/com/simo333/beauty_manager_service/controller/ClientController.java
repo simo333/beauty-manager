@@ -20,24 +20,24 @@ import javax.validation.Valid;
 @Slf4j
 public class ClientController {
 
-    private final ClientServiceImpl clientService;
+    private final ClientServiceImpl service;
 
     @Secured("ROLE_ADMIN")
     @GetMapping
     public ResponseEntity<Page<Client>> getClientsPage(Pageable page) {
-        Page<Client> clients = clientService.getClientsPage(page);
+        Page<Client> clients = service.getClientsPage(page);
         return new ResponseEntity<>(clients, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Client> getClient(@PathVariable Long id) {
-        Client client = clientService.getOne(id);
+        Client client = service.getOne(id);
         return new ResponseEntity<>(client, HttpStatus.OK);
     }
 
     @PostMapping
     public ResponseEntity<Client> saveClient(@RequestBody @Valid Client client) {
-        Client saved = clientService.save(client);
+        Client saved = service.save(client);
         return new ResponseEntity<>(saved, HttpStatus.CREATED);
     }
 
@@ -45,14 +45,14 @@ public class ClientController {
     @PutMapping("/{id}")
     public ResponseEntity<Client> updateClient(@PathVariable Long id, @RequestBody @Valid Client client) {
         client.setId(id);
-        Client updated = clientService.update(client);
+        Client updated = service.update(client);
         return new ResponseEntity<>(updated, HttpStatus.OK);
     }
 
     @Secured("ROLE_ADMIN")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteClient(@PathVariable Long id) {
-        clientService.deleteById(id);
+        service.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
