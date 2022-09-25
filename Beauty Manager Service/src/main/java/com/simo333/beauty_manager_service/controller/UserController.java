@@ -21,26 +21,26 @@ import javax.validation.Valid;
 @Slf4j
 public class UserController {
 
-    private final UserServiceImpl userService;
+    private final UserServiceImpl service;
 
     @Secured("ROLE_ADMIN")
     @GetMapping
     public ResponseEntity<Page<AppUser>> getUsersPage(Pageable page) {
-        Page<AppUser> users = userService.getUsersPage(page);
+        Page<AppUser> users = service.getUsersPage(page);
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
     @Secured({"ROLE_USER", "ROLE_ADMIN"})
     @GetMapping("/{id}")
     public ResponseEntity<AppUser> getUser(@PathVariable Long id) {
-        AppUser client = userService.getUser(id);
+        AppUser client = service.getUser(id);
         return new ResponseEntity<>(client, HttpStatus.OK);
     }
 
     @Secured("ROLE_ADMIN")
     @PostMapping
     public ResponseEntity<AppUser> saveUser(@RequestBody @Valid AppUser user) {
-        AppUser saved = userService.save(user);
+        AppUser saved = service.save(user);
         return new ResponseEntity<>(saved, HttpStatus.CREATED);
     }
 
@@ -48,21 +48,21 @@ public class UserController {
     @PutMapping("/{id}")
     public ResponseEntity<AppUser> updateUser(@PathVariable Long id, @RequestBody @Valid AppUser appUser) {
         appUser.setId(id);
-        AppUser updated = userService.update(appUser);
+        AppUser updated = service.update(appUser);
         return new ResponseEntity<>(updated, HttpStatus.OK);
     }
 
     @Secured("ROLE_USER")
     @PatchMapping
     public ResponseEntity<AppUser> patchUser(@RequestBody @Valid AppUserPatch patch) {
-        AppUser updated = userService.patch(patch);
+        AppUser updated = service.patch(patch);
         return new ResponseEntity<>(updated, HttpStatus.OK);
     }
 
     @Secured({"ROLE_ADMIN", "ROLE_USER"})
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable Long id) {
-        userService.deleteById(id);
+        service.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
