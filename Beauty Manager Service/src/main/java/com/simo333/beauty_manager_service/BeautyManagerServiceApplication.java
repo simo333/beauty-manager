@@ -1,16 +1,15 @@
 package com.simo333.beauty_manager_service;
 
-import com.simo333.beauty_manager_service.model.AppUser;
-import com.simo333.beauty_manager_service.model.Client;
-import com.simo333.beauty_manager_service.model.Role;
-import com.simo333.beauty_manager_service.service.ClientService;
-import com.simo333.beauty_manager_service.service.RoleService;
-import com.simo333.beauty_manager_service.service.UserService;
+import com.simo333.beauty_manager_service.model.*;
+import com.simo333.beauty_manager_service.service.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import java.math.BigDecimal;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 
 @SpringBootApplication
@@ -21,7 +20,9 @@ public class BeautyManagerServiceApplication {
     }
 
     @Bean
-    CommandLineRunner run(UserService userService, RoleService roleService, ClientService clientService) {
+    CommandLineRunner run(UserService userService, RoleService roleService, ClientService clientService,
+                          TreatmentCategoryService categoryService, TreatmentService treatmentService,
+                          VisitService visitService) {
         return args -> {
             roleService.save(new Role(null, Role.Type.ROLE_USER));
             roleService.save(new Role(null, Role.Type.ROLE_ADMIN));
@@ -38,6 +39,27 @@ public class BeautyManagerServiceApplication {
             userService.addRoleToUser(2L, 2L);
             userService.addRoleToUser(3L, 2L);
             userService.addRoleToUser(3L, 1L);
+
+            TreatmentCategory category1 = categoryService.save(new TreatmentCategory(null, "Kategoria 1"));
+            TreatmentCategory category2 = categoryService.save(new TreatmentCategory(null, "Kategoria 2"));
+            TreatmentCategory category3 = categoryService.save(new TreatmentCategory(null, "Kategoria 3"));
+
+            Treatment treatment1 = treatmentService.save(new Treatment(null, "Zabieg 1", "Opis",
+                    BigDecimal.valueOf(10), Duration.ofMinutes(60), category1));
+            Treatment treatment2 = treatmentService.save(new Treatment(null, "Zabieg 2", "Opis",
+                    BigDecimal.valueOf(20), Duration.ofMinutes(30), category1));
+            Treatment treatment3 = treatmentService.save(new Treatment(null, "Zabieg 3", "Opis",
+                    BigDecimal.valueOf(30), Duration.ofMinutes(15), category1));
+            Treatment treatment4 = treatmentService.save(new Treatment(null, "Zabieg 4", "Opis",
+                    BigDecimal.valueOf(40), Duration.ofMinutes(45), category1));
+            Treatment treatment5 = treatmentService.save(new Treatment(null, "Zabieg 5", "Opis",
+                    BigDecimal.valueOf(50), Duration.ofMinutes(30), category2));
+
+            visitService.save(new Visit(null, treatment1, client1, LocalDateTime.now().plusDays(5)));
+            visitService.save(new Visit(null, treatment2, client1, LocalDateTime.now().plusDays(6)));
+            visitService.save(new Visit(null, treatment3, client1, LocalDateTime.now().plusDays(3)));
+            visitService.save(new Visit(null, treatment3, client1, LocalDateTime.now().plusDays(7)));
+            visitService.save(new Visit(null, treatment3, client1, LocalDateTime.now().plusDays(8)));
         };
     }
 
