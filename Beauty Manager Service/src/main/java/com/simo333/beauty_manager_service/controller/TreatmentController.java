@@ -29,6 +29,12 @@ public class TreatmentController {
         return new ResponseEntity<>(treatments, HttpStatus.OK);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Treatment> getTreatmentById(@PathVariable Long id) {
+        Treatment treatment = service.getOne(id);
+        return new ResponseEntity<>(treatment, HttpStatus.OK);
+    }
+
     @GetMapping("/category/{id}")
     public ResponseEntity<List<Treatment>> getTreatmentByCategory(@PathVariable Long id) {
         List<Treatment> treatments = service.getTreatmentsByCategoryId(id);
