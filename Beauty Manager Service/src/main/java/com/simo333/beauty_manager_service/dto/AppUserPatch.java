@@ -1,16 +1,20 @@
 package com.simo333.beauty_manager_service.dto;
 
+import com.simo333.beauty_manager_service.model.Client;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
 
 @Getter
 @Setter
+@ToString
 public class AppUserPatch {
+    @Email
+    private String email;
     @Size(min = 8, max = 120)
     private String password;
-    @Pattern(regexp = "^\\+\\d{11}$")
-    private String phoneNumber;
+    private Client client;
 }

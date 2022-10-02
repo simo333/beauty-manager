@@ -1,8 +1,10 @@
 package com.simo333.beauty_manager_service.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import net.minidev.json.annotate.JsonIgnore;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -17,6 +19,7 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties({"password"})
 public class AppUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

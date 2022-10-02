@@ -54,8 +54,15 @@ public class UserController {
 
     @Secured("ROLE_USER")
     @PatchMapping
-    public ResponseEntity<AppUser> patchUser(@RequestBody @Valid AppUserPatch patch) {
-        AppUser updated = service.patch(patch);
+    public ResponseEntity<AppUser> patchUserWithRoleUser(@RequestBody @Valid AppUserPatch patch) {
+        AppUser updated = service.patchWithRoleUser(patch);
+        return new ResponseEntity<>(updated, HttpStatus.OK);
+    }
+
+    @Secured("ROLE_ADMIN")
+    @PatchMapping("/{id}")
+    public ResponseEntity<AppUser> patchUserWithRoleAdmin(@PathVariable Long id, @RequestBody @Valid AppUserPatch patch) {
+        AppUser updated = service.patchWithRoleAdmin(id, patch);
         return new ResponseEntity<>(updated, HttpStatus.OK);
     }
 

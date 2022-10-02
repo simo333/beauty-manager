@@ -105,7 +105,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public AppUser patch(AppUserPatch patch) {
+    public AppUser patchWithRoleUser(AppUserPatch patch) {
         User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         AppUser user = getUser(principal.getUsername());
         Set<String> changes = new HashSet<>();
@@ -113,9 +113,34 @@ public class UserServiceImpl implements UserService {
             user.setPassword(passwordEncode.encode(patch.getPassword()));
             changes.add("password");
         }
-        if(patch.getPhoneNumber() != null) {
-            user.getClient().setPhoneNumber(patch.getPhoneNumber());
+        if(patch.getClient().getPhoneNumber() != null) {
+            user.getClient().setPhoneNumber(patch.getClient().getPhoneNumber());
             changes.add("phoneNumber");
+        }
+        log.info("Patching user with id '{}'. Changed fields: {}", user.getId(), changes.toArray());
+        return userRepository.save(user);
+    }
+
+    @Transactional
+    @Override
+    public AppUser patchWithRoleAdmin(Long id, AppUserPatch patch) {
+        AppUser user = getUser(id);
+        Set<String> changes = new HashSet<>();
+        if(patch.getPassword() != null) {
+            user.setPassword(passwordEncode.encode(patch.getPassword()));
+            changes.add("password");
+        }
+        if(patch.getClient().getPhoneNumber() != null) {
+            user.getClient().setPhoneNumber(patch.getClient().getPhoneNumber());
+            changes.add("phoneNumber");
+        }
+        if(patch.getClient().getFirstName() != null) {
+            user.getClient().setFirstName(patch.getClient().getFirstName());
+            changes.add("firstName");
+        }
+        if(patch.getClient().getLastName() != null) {
+            user.getClient().setLastName(patch.getClient().getLastName());
+            changes.add("lastName");
         }
         log.info("Patching user with id '{}'. Changed fields: {}", user.getId(), changes.toArray());
         return userRepository.save(user);
