@@ -1,11 +1,11 @@
 package com.simo333.beauty_manager_service.service;
 
 import com.simo333.beauty_manager_service.model.TreatmentCategory;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface TreatmentCategoryService {
-    List<TreatmentCategory> getCategories();
+    Page<TreatmentCategory> getCategories(Pageable page);
 
     TreatmentCategory save(TreatmentCategory category);
 

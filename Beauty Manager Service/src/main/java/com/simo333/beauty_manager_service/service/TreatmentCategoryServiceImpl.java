@@ -5,6 +5,8 @@ import com.simo333.beauty_manager_service.model.TreatmentCategory;
 import com.simo333.beauty_manager_service.repository.TreatmentCategoryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,9 +23,9 @@ public class TreatmentCategoryServiceImpl implements TreatmentCategoryService {
     private final TreatmentService treatmentService;
 
     @Override
-    public List<TreatmentCategory> getCategories() {
+    public Page<TreatmentCategory> getCategories(Pageable page) {
         log.info("Fetching Treatment Categories.");
-        return repository.findAll();
+        return repository.findAll(page);
     }
 
     @Transactional

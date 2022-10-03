@@ -4,6 +4,8 @@ import com.simo333.beauty_manager_service.model.TreatmentCategory;
 import com.simo333.beauty_manager_service.service.TreatmentCategoryServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
@@ -21,10 +23,9 @@ public class TreatmentCategoryController {
 
     private final TreatmentCategoryServiceImpl service;
 
-
     @GetMapping
-    public ResponseEntity<List<TreatmentCategory>> getCategories() {
-        List<TreatmentCategory> categories = service.getCategories();
+    public ResponseEntity<Page<TreatmentCategory>> getCategories(Pageable page) {
+        Page<TreatmentCategory> categories = service.getCategories(page);
         return new ResponseEntity<>(categories, HttpStatus.OK);
     }
 
