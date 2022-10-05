@@ -1,6 +1,5 @@
 package com.simo333.beauty_manager_service.service;
 
-import com.simo333.beauty_manager_service.model.Treatment;
 import com.simo333.beauty_manager_service.model.TreatmentCategory;
 import com.simo333.beauty_manager_service.repository.TreatmentCategoryRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,12 +19,17 @@ import java.util.List;
 public class TreatmentCategoryServiceImpl implements TreatmentCategoryService {
 
     private final TreatmentCategoryRepository repository;
-    private final TreatmentService treatmentService;
 
     @Override
     public Page<TreatmentCategory> getCategories(Pageable page) {
-        log.info("Fetching Treatment Categories.");
+        log.info("Fetching Treatment Categories. {}", page);
         return repository.findAll(page);
+    }
+
+    @Override
+    public List<TreatmentCategory> getCategories() {
+        log.info("Fetching Treatment Categories.");
+        return repository.findAll();
     }
 
     @Transactional
@@ -56,8 +60,6 @@ public class TreatmentCategoryServiceImpl implements TreatmentCategoryService {
     @Transactional
     @Override
     public void deleteById(Long id) {
-        List<Treatment> treatments = treatmentService.getTreatmentsByCategoryId(id);
-        treatments.forEach(treatment -> treatment.setCategory(null));
         log.info("Deleting TreatmentCategory with id '{}'", id);
         repository.deleteById(id);
     }

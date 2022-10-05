@@ -29,6 +29,12 @@ public class TreatmentCategoryController {
         return new ResponseEntity<>(categories, HttpStatus.OK);
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<List<TreatmentCategory>> getAllCategories() {
+        List<TreatmentCategory> categories = service.getCategories();
+        return new ResponseEntity<>(categories, HttpStatus.OK);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<TreatmentCategory> getCategory(@PathVariable Long id) {
         TreatmentCategory category = service.getOne(id);

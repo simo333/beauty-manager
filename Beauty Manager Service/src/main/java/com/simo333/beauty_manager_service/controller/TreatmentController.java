@@ -36,8 +36,8 @@ public class TreatmentController {
     }
 
     @GetMapping("/category/{id}")
-    public ResponseEntity<List<Treatment>> getTreatmentByCategory(@PathVariable Long id) {
-        List<Treatment> treatments = service.getTreatmentsByCategoryId(id);
+    public ResponseEntity<Page<Treatment>> getTreatmentByCategory(@PathVariable Long id, Pageable page) {
+        Page<Treatment> treatments = service.getTreatmentsByCategoryId(id, page);
         return new ResponseEntity<>(treatments, HttpStatus.OK);
     }
 

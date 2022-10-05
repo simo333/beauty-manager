@@ -51,7 +51,7 @@ public class VisitController {
 
     @Secured("ROLE_ADMIN")
     @GetMapping("/date/{since}/{to}")
-    public ResponseEntity<Page<Visit>> getVisitsByClientAndDates(
+    public ResponseEntity<Page<Visit>> getVisitsByDates(
             Pageable page,
             @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime since,
             @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime to) {
