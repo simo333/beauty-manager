@@ -10,6 +10,8 @@ import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -22,6 +24,12 @@ public class ClientServiceImpl implements ClientService {
     public Page<Client> getClientsPage(Pageable page) {
         log.info("Fetching Clients. {}", page);
         return repository.findAll(page);
+    }
+
+    @Override
+    public List<Client> getClients() {
+        log.info("Fetching Clients.");
+        return repository.findAll();
     }
 
     @Transactional
@@ -43,12 +51,23 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public Client getOne(String phoneNumber) {
-        Client client = repository.findByPhoneNumber(phoneNumber).orElseThrow(() -> {
+        Client client = repository.findDistinctByPhoneNumber(phoneNumber).orElseThrow(() -> {
             log.error("Client with phone number '{}' not found", phoneNumber);
             throw new ResourceNotFoundException("Client not found. For phone number: " + phoneNumber);
         });
         log.info("Client '{}' has been found.", client.getFullName());
         return client;
+    }
+
+    @Override
+    public Client getOne(Client client) {
+        Client found = repository.findByFirstNameAndLastNameAndPhoneNumber(
+                client.getFirstName(), client.getLastName(), client.getPhoneNumber()).orElseThrow(() -> {
+            log.error("Client with '{}' not found", client);
+            throw new ResourceNotFoundException("Client not found. For client: " + client);
+        });
+        log.info("Client '{}' has been found.", client.getFullName());
+        return found;
     }
 
     @Transactional
@@ -67,12 +86,22 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public boolean existsByPhone(String phoneNumber) {
-        if (repository.existsByPhoneNumber(phoneNumber)) {
-            log.info("Phone number '{}' is already taken.", phoneNumber);
+    public boolean existsById(Long id) {
+        if (repository.existsById(id)) {
+            log.info("Client with id '{}' exists.", id);
             return true;
         }
-        log.info("Phone number '{}' is not taken yet.", phoneNumber);
+        return false;
+    }
+
+    @Override
+    public boolean exists(Client client) {
+        if (repository.existsByFirstNameAndLastNameAndPhoneNumber(
+                client.getFirstName(), client.getLastName(), client.getPhoneNumber())) {
+            log.info("Client with full name '{}' and phone number '{}' exists.",
+                    client.getFullName(), client.getPhoneNumber());
+            return true;
+        }
         return false;
     }
 }

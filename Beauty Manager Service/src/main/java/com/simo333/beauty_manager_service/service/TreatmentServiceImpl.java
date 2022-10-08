@@ -27,6 +27,12 @@ public class TreatmentServiceImpl implements TreatmentService {
     }
 
     @Override
+    public List<Treatment> getTreatments() {
+        log.info("Fetching Treatments.");
+        return repository.findAll();
+    }
+
+    @Override
     public Page<Treatment> getTreatmentsByCategoryId(Long categoryId, Pageable page) {
         log.info("Fetching Treatments with category: {}. {}", categoryId, page);
         return repository.findAllByCategoryId(categoryId, page);

@@ -34,7 +34,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, AuthEntryPointJwt unauthorizedHandler, UserService userService) throws Exception {
-        String[] permitAllPaths = {"/api/test/**", "/api/clients/**", "/api/categories/**", "/api/treatments/**"};
+        String[] permitAllPaths = {"/api/test/**", "/api/clients/**", "/api/categories/**", "/api/treatments/**", "/api/visits"};
         http.cors().configurationSource(corsConfiguration());
         http.csrf().disable()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()

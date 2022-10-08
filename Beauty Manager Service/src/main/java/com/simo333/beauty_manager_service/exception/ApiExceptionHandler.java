@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestControllerAdvice
-public class AuthExceptionHandler {
+public class ApiExceptionHandler {
     @ExceptionHandler(value = RefreshTokenException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ExceptionResponse handleTokenRefreshException(RefreshTokenException ex, WebRequest request) {
@@ -54,7 +54,7 @@ public class AuthExceptionHandler {
     @ExceptionHandler(value = HttpMessageNotReadableException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionResponse handleHttpMessageNotReadableException(HttpMessageNotReadableException ex, WebRequest request) {
-        String message = "Request body is missing.";
+        String message = "Request body is missing or some of inputs are incorrect.";
         return new ExceptionResponse(
                 HttpStatus.BAD_REQUEST,
                 message,
@@ -80,7 +80,7 @@ public class AuthExceptionHandler {
     @ExceptionHandler(value = SQLIntegrityConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionResponse handleSQLIntegrityConstraintViolationException(SQLIntegrityConstraintViolationException ex, WebRequest request) {
-        String message = "The resource cannot be changed this way.";
+        String message = "Ta nazwa jest już zajęta.";
         return new ExceptionResponse(
                 HttpStatus.BAD_REQUEST,
                 message,
@@ -111,6 +111,15 @@ public class AuthExceptionHandler {
     @ExceptionHandler(value = RequestRejectedException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionResponse handleRequestRejectedException(RequestRejectedException ex, WebRequest request) {
+        return new ExceptionResponse(
+                HttpStatus.BAD_REQUEST,
+                ex.getMessage(),
+                request.getDescription(false));
+    }
+
+    @ExceptionHandler(value = FreeBusyException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionResponse handleFreeBusyException(FreeBusyException ex, WebRequest request) {
         return new ExceptionResponse(
                 HttpStatus.BAD_REQUEST,
                 ex.getMessage(),

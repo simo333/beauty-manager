@@ -1,5 +1,7 @@
 package com.simo333.beauty_manager_service.service;
 
+import com.simo333.beauty_manager_service.dto.FreeBusyResponse;
+import com.simo333.beauty_manager_service.exception.FreeBusyException;
 import com.simo333.beauty_manager_service.model.Visit;
 import com.simo333.beauty_manager_service.repository.VisitRepository;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +13,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -19,6 +25,7 @@ import java.time.LocalDateTime;
 public class VisitServiceImpl implements VisitService {
 
     private final VisitRepository repository;
+    private final ClientServiceImpl clientService;
 
     @Override
     public Page<Visit> getVisitsPage(Pageable page) {
@@ -49,6 +56,14 @@ public class VisitServiceImpl implements VisitService {
     @Transactional
     @Override
     public Visit save(Visit visit) {
+        if (visit.getClient().getId() == null) {
+            if (clientService.exists(visit.getClient())) {
+                visit.setClient(clientService.getOne(visit.getClient()));
+            } else {
+                visit.setClient(clientService.save(visit.getClient()));
+            }
+        }
+        checkFreeBusy(visit);
         log.info("Saving a new visit with id: {}", visit.getId());
         return repository.save(visit);
     }
@@ -76,5 +91,37 @@ public class VisitServiceImpl implements VisitService {
     public void deleteById(Long id) {
         log.info("Deleting visit with id '{}'", id);
         repository.deleteById(id);
+    }
+
+    public FreeBusyResponse checkFreeBusy(Visit visit) {
+        if (isBusy(visit)) {
+            throw new FreeBusyException(getNextFreeTime(visit));
+        }
+        return new FreeBusyResponse(isBusy(visit), visit.getDateTime().toString());
+    }
+
+    public boolean isBusy(Visit visit) {
+        LocalDateTime treatmentFinishTime = visit.getDateTime().plus(visit.getTreatment().getDuration());
+        List<Visit> allByDateTimeBetween = repository.findAllByDateTimeBetween(visit.getDateTime(), treatmentFinishTime);
+
+        getNextFreeTime(visit);
+
+        log.info("Found: {}", allByDateTimeBetween.toString());
+        log.info("Check if busy: '{}' to '{}'.", visit.getDateTime(), treatmentFinishTime);
+        return repository.existsByDateTimeBetween(visit.getDateTime(), treatmentFinishTime);
+    }
+
+    public String getNextFreeTime(Visit visit) {
+        LocalDateTime treatmentFinishTime = visit.getDateTime().plus(visit.getTreatment().getDuration());
+        List<Visit> allByDateTimeBetween = repository.findAllByDateTimeBetween(visit.getDateTime(), treatmentFinishTime);
+        Optional<Visit> lastDate = allByDateTimeBetween.stream().max(Comparator.comparing(Visit::getFinishDateTime));
+        if (lastDate.isPresent()) {
+            LocalDateTime finishDateTime = lastDate.get().getFinishDateTime();
+            if (finishDateTime.toLocalTime().isAfter(LocalTime.of(16, 30))) {
+                return "Brak wolnych terminów o podanej godzinie.";
+            }
+            return finishDateTime.toString();
+        }
+        return visit.getDateTime().toString();
     }
 }
