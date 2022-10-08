@@ -1,13 +1,18 @@
 package com.simo333.beauty_manager_service.service;
 
+import com.simo333.beauty_manager_service.dto.AppUserPatch;
 import com.simo333.beauty_manager_service.model.AppUser;
 import com.simo333.beauty_manager_service.model.Role;
 import com.simo333.beauty_manager_service.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -15,20 +20,30 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import javax.annotation.PostConstruct;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 
 @Service
 @Transactional(readOnly = true)
-@RequiredArgsConstructor
 @Slf4j
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final RoleService roleService;
+    @Autowired
+    private RefreshTokenServiceImpl tokenService;
     private final PasswordEncoder passwordEncode;
+
+
+    /* Avoiding circular references */
+    @PostConstruct
+    public void init() {
+        tokenService.setUserService(this);
+    }
 
     @Transactional
     @Override
@@ -39,16 +54,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<AppUser> getAll() {
+    public Page<AppUser> getUsersPage(Pageable page) {
         log.info("Fetching all users");
-        return userRepository.findAll();
+        return userRepository.findAll(page);
     }
 
     @Override
     public AppUser getUser(Long userId) {
         AppUser user = userRepository.findById(userId).orElseThrow(() -> {
             log.error("User with id '{}' not found", userId);
-            throw new ResourceNotFoundException("User not found.");
+            throw new ResourceNotFoundException("User not found. For id " + userId);
         });
         log.info("User '{}' has been found.", user.getEmail());
         return user;
@@ -67,10 +82,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean existsByEmail(String email) {
         if (userRepository.existsByEmail(email)) {
-            log.info("User with email '{}' has been found.", email);
+            log.info("Email '{}' is already taken.", email);
             return true;
         }
-        log.info("User with email '{}' not found.", email);
+        log.info("Email '{}' is not taken yet.", email);
         return false;
     }
 
@@ -80,7 +95,6 @@ public class UserServiceImpl implements UserService {
         return buildUserDetails(user);
     }
 
-    /*T TODO consider: block editing user's email? */
     @Transactional
     @Override
     public AppUser update(AppUser user) {
@@ -91,7 +105,51 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public void delete(long userId) {
+    public AppUser patchWithRoleUser(AppUserPatch patch) {
+        User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        AppUser user = getUser(principal.getUsername());
+        Set<String> changes = new HashSet<>();
+        if(patch.getPassword() != null) {
+            user.setPassword(passwordEncode.encode(patch.getPassword()));
+            changes.add("password");
+        }
+        if(patch.getClient().getPhoneNumber() != null) {
+            user.getClient().setPhoneNumber(patch.getClient().getPhoneNumber());
+            changes.add("phoneNumber");
+        }
+        log.info("Patching user with id '{}'. Changed fields: {}", user.getId(), changes.toArray());
+        return userRepository.save(user);
+    }
+
+    @Transactional
+    @Override
+    public AppUser patchWithRoleAdmin(Long id, AppUserPatch patch) {
+        AppUser user = getUser(id);
+        Set<String> changes = new HashSet<>();
+        if(patch.getPassword() != null) {
+            user.setPassword(passwordEncode.encode(patch.getPassword()));
+            changes.add("password");
+        }
+        if(patch.getClient().getPhoneNumber() != null) {
+            user.getClient().setPhoneNumber(patch.getClient().getPhoneNumber());
+            changes.add("phoneNumber");
+        }
+        if(patch.getClient().getFirstName() != null) {
+            user.getClient().setFirstName(patch.getClient().getFirstName());
+            changes.add("firstName");
+        }
+        if(patch.getClient().getLastName() != null) {
+            user.getClient().setLastName(patch.getClient().getLastName());
+            changes.add("lastName");
+        }
+        log.info("Patching user with id '{}'. Changed fields: {}", user.getId(), changes.toArray());
+        return userRepository.save(user);
+    }
+
+    @Transactional
+    @Override
+    public void deleteById(long userId) {
+        tokenService.deleteByUser(getUser(userId));
         log.info("Deleting user with id '{}'", userId);
         userRepository.deleteById(userId);
     }
@@ -124,4 +182,5 @@ public class UserServiceImpl implements UserService {
                 user.getPassword(),
                 authorities);
     }
+
 }

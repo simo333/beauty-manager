@@ -1,12 +1,13 @@
 package com.simo333.beauty_manager_service.service;
 
 import com.simo333.beauty_manager_service.exception.RefreshTokenException;
+import com.simo333.beauty_manager_service.model.AppUser;
 import com.simo333.beauty_manager_service.model.RefreshToken;
 import com.simo333.beauty_manager_service.repository.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,15 +15,21 @@ import java.time.Instant;
 import java.util.UUID;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 @RequiredArgsConstructor
 @Slf4j
 public class RefreshTokenServiceImpl implements RefreshTokenService {
     @Value("${app.security.refresh-token.expirationMs}")
     private Long refreshTokenDurationMs;
     private final RefreshTokenRepository refreshTokenRepository;
-    private final UserService userService;
+    private UserService userService;
 
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
+
+    @Transactional(readOnly = true)
     public RefreshToken findByToken(String token) {
         RefreshToken refreshToken = refreshTokenRepository.findByToken(token).orElseThrow(() -> {
             log.error("Refresh token not found: {}", token);
@@ -32,7 +39,6 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
         return refreshToken;
     }
 
-    @Transactional
     @Override
     public RefreshToken create(String userEmail) {
         RefreshToken refreshToken = new RefreshToken();
@@ -56,10 +62,9 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
         return true;
     }
 
-    @Transactional
     @Override
-    public int deleteByUserId(Long userId) {
-        log.info("Deleting refresh token for user with id '{}'", userId);
-        return refreshTokenRepository.deleteByUser(userService.getUser(userId));
+    public void deleteByUser(AppUser user) {
+        log.info("Deleting refresh token for user with id '{}'", user.getId());
+        refreshTokenRepository.deleteByUser(user);
     }
 }
