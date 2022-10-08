@@ -9,6 +9,8 @@ import java.util.List;
 public interface TreatmentService {
     Page<Treatment> getTreatmentsPage(Pageable page);
 
+    List<Treatment> getTreatments();
+
     Page<Treatment> getTreatmentsByCategoryId(Long categoryId, Pageable page);
 
     List<Treatment> getTreatmentsByCategoryId(Long categoryId);

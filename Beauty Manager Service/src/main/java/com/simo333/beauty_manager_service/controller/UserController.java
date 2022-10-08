@@ -33,8 +33,15 @@ public class UserController {
     @Secured({"ROLE_USER", "ROLE_ADMIN"})
     @GetMapping("/{id}")
     public ResponseEntity<AppUser> getUser(@PathVariable Long id) {
-        AppUser client = service.getUser(id);
-        return new ResponseEntity<>(client, HttpStatus.OK);
+        AppUser user = service.getUser(id);
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
+    @GetMapping("/email/{email}")
+    public ResponseEntity<AppUser> getUserByEmail(@PathVariable String email) {
+        AppUser user = service.getUser(email);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @Secured("ROLE_ADMIN")

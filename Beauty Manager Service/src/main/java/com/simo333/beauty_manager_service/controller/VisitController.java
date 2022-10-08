@@ -1,6 +1,8 @@
 package com.simo333.beauty_manager_service.controller;
 
+import com.simo333.beauty_manager_service.dto.FreeBusyResponse;
 import com.simo333.beauty_manager_service.model.Visit;
+import com.simo333.beauty_manager_service.repository.VisitRepository;
 import com.simo333.beauty_manager_service.service.VisitServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Controller
 @RequestMapping("/api/visits")
@@ -66,9 +69,9 @@ public class VisitController {
         return new ResponseEntity<>(visit, HttpStatus.OK);
     }
 
-    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     @PostMapping
     public ResponseEntity<Visit> saveVisit(@RequestBody @Valid Visit visit) {
+        log.info("visit date {}", visit.getDateTime());
         Visit saved = service.save(visit);
         return new ResponseEntity<>(saved, HttpStatus.CREATED);
     }
@@ -86,6 +89,12 @@ public class VisitController {
     public ResponseEntity<?> deleteVisit(@PathVariable Long id) {
         service.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/free-busy")
+    public ResponseEntity<FreeBusyResponse> checkIfFree(@Valid @RequestBody Visit visit) {
+        FreeBusyResponse response = service.checkFreeBusy(visit);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 }

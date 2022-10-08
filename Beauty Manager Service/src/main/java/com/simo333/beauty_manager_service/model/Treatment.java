@@ -26,7 +26,7 @@ public class Treatment {
     @Size(min = 2, max = 100)
     private String name;
     @NotBlank
-    @Size(min = 2, max = 500)
+    @Size(min = 2, max = 1000)
     private String description;
     @NotNull
     @Positive

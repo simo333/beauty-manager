@@ -9,7 +9,11 @@ import java.util.Optional;
 
 @Repository
 public interface ClientRepository extends JpaRepository<Client, Long> {
-    boolean existsByPhoneNumber(String phoneNumber);
+    boolean existsById(Long id);
 
-    Optional<Client> findByPhoneNumber(String phoneNumber);
+    boolean existsByFirstNameAndLastNameAndPhoneNumber(String firstName, String lastName, String phoneNumber);
+
+    Optional<Client> findDistinctByPhoneNumber(String phoneNumber);
+
+    Optional<Client> findByFirstNameAndLastNameAndPhoneNumber(String firstName, String lastName, String phoneNumber);
 }

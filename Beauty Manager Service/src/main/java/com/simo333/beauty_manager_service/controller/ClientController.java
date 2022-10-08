@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Controller
 @RequestMapping("/api/clients")
@@ -26,6 +27,13 @@ public class ClientController {
     @GetMapping
     public ResponseEntity<Page<Client>> getClientsPage(Pageable page) {
         Page<Client> clients = service.getClientsPage(page);
+        return new ResponseEntity<>(clients, HttpStatus.OK);
+    }
+
+    @Secured("ROLE_ADMIN")
+    @GetMapping("/all")
+    public ResponseEntity<List<Client>> getClients() {
+        List<Client> clients = service.getClients();
         return new ResponseEntity<>(clients, HttpStatus.OK);
     }
 

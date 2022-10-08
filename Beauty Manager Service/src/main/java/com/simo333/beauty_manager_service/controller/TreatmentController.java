@@ -41,6 +41,12 @@ public class TreatmentController {
         return new ResponseEntity<>(treatments, HttpStatus.OK);
     }
 
+    @GetMapping("/category-list/{id}")
+    public ResponseEntity<List<Treatment>> getAllTreatmentByCategory(@PathVariable Long id) {
+        List<Treatment> treatments = service.getTreatmentsByCategoryId(id);
+        return new ResponseEntity<>(treatments, HttpStatus.OK);
+    }
+
     @Secured("ROLE_ADMIN")
     @PostMapping
     public ResponseEntity<Treatment> saveTreatment(@RequestBody @Valid Treatment treatment) {

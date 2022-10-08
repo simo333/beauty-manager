@@ -40,4 +40,8 @@ public class Visit {
         this.client = client;
         this.dateTime = dateTime;
     }
+
+    public LocalDateTime getFinishDateTime() {
+        return dateTime.plus(treatment.getDuration());
+    }
 }
