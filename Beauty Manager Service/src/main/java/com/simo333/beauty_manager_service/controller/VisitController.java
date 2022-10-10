@@ -2,7 +2,6 @@ package com.simo333.beauty_manager_service.controller;
 
 import com.simo333.beauty_manager_service.dto.FreeBusyResponse;
 import com.simo333.beauty_manager_service.model.Visit;
-import com.simo333.beauty_manager_service.repository.VisitRepository;
 import com.simo333.beauty_manager_service.service.VisitServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Controller
 @RequestMapping("/api/visits")

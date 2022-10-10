@@ -109,11 +109,11 @@ public class UserServiceImpl implements UserService {
         User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         AppUser user = getUser(principal.getUsername());
         Set<String> changes = new HashSet<>();
-        if(patch.getPassword() != null) {
+        if (patch.getPassword() != null) {
             user.setPassword(passwordEncode.encode(patch.getPassword()));
             changes.add("password");
         }
-        if(patch.getClient().getPhoneNumber() != null) {
+        if (patch.getClient().getPhoneNumber() != null) {
             user.getClient().setPhoneNumber(patch.getClient().getPhoneNumber());
             changes.add("phoneNumber");
         }
@@ -126,19 +126,19 @@ public class UserServiceImpl implements UserService {
     public AppUser patchWithRoleAdmin(Long id, AppUserPatch patch) {
         AppUser user = getUser(id);
         Set<String> changes = new HashSet<>();
-        if(patch.getPassword() != null) {
+        if (patch.getPassword() != null) {
             user.setPassword(passwordEncode.encode(patch.getPassword()));
             changes.add("password");
         }
-        if(patch.getClient().getPhoneNumber() != null) {
+        if (patch.getClient().getPhoneNumber() != null) {
             user.getClient().setPhoneNumber(patch.getClient().getPhoneNumber());
             changes.add("phoneNumber");
         }
-        if(patch.getClient().getFirstName() != null) {
+        if (patch.getClient().getFirstName() != null) {
             user.getClient().setFirstName(patch.getClient().getFirstName());
             changes.add("firstName");
         }
-        if(patch.getClient().getLastName() != null) {
+        if (patch.getClient().getLastName() != null) {
             user.getClient().setLastName(patch.getClient().getLastName());
             changes.add("lastName");
         }
