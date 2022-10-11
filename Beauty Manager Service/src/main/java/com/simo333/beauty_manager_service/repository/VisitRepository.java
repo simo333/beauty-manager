@@ -19,6 +19,7 @@ public interface VisitRepository extends JpaRepository<Visit, Long> {
     Page<Visit> findAllByDateTimeBetween(LocalDateTime since, LocalDateTime to, Pageable page);
 
     boolean existsByDateTimeBetween(LocalDateTime start, LocalDateTime end);
+
     List<Visit> findAllByDateTimeBetween(LocalDateTime start, LocalDateTime end);
 
 }

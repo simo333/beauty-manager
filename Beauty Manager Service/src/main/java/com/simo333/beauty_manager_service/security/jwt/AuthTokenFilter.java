@@ -1,7 +1,6 @@
 package com.simo333.beauty_manager_service.security.jwt;
 
 import com.simo333.beauty_manager_service.service.UserService;
-import com.simo333.beauty_manager_service.service.UserServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
