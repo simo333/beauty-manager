@@ -12,8 +12,8 @@ import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZonedDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -40,14 +40,14 @@ public class VisitServiceImpl implements VisitService {
     }
 
     @Override
-    public Page<Visit> getVisitsByClientAndDate(Long clientId, LocalDateTime since, LocalDateTime to, Pageable page) {
+    public Page<Visit> getVisitsByClientAndDate(Long clientId, ZonedDateTime since, ZonedDateTime to, Pageable page) {
         log.info("Fetching Visits for client with id '{}' and date between {} and {}. {}",
                 clientId, since, to, page);
         return repository.findAllByClientIdAndDateTimeBetween(clientId, since, to, page);
     }
 
     @Override
-    public Page<Visit> getVisitsByDate(LocalDateTime since, LocalDateTime to, Pageable page) {
+    public Page<Visit> getVisitsByDate(ZonedDateTime since, ZonedDateTime to, Pageable page) {
         log.info("Fetching Visits with date between {} and {}. {}",
                 since, to, page);
         return repository.findAllByDateTimeBetween(since, to, page);
@@ -101,7 +101,7 @@ public class VisitServiceImpl implements VisitService {
     }
 
     public boolean isBusy(Visit visit) {
-        LocalDateTime treatmentFinishTime = visit.getDateTime().plus(visit.getTreatment().getDuration());
+        ZonedDateTime treatmentFinishTime = visit.getDateTime().plus(visit.getTreatment().getDuration());
         List<Visit> allByDateTimeBetween = repository.findAllByDateTimeBetween(visit.getDateTime(), treatmentFinishTime);
 
         getNextFreeTime(visit);
@@ -112,16 +112,16 @@ public class VisitServiceImpl implements VisitService {
     }
 
     public String getNextFreeTime(Visit visit) {
-        LocalDateTime treatmentFinishTime = visit.getDateTime().plus(visit.getTreatment().getDuration());
+        ZonedDateTime treatmentFinishTime = visit.getDateTime().plus(visit.getTreatment().getDuration());
         List<Visit> allByDateTimeBetween = repository.findAllByDateTimeBetween(visit.getDateTime(), treatmentFinishTime);
         Optional<Visit> lastDate = allByDateTimeBetween.stream().max(Comparator.comparing(Visit::getFinishDateTime));
         if (lastDate.isPresent()) {
-            LocalDateTime finishDateTime = lastDate.get().getFinishDateTime();
+            ZonedDateTime finishDateTime = lastDate.get().getFinishDateTime();
             if (finishDateTime.toLocalTime().isAfter(LocalTime.of(16, 30))) {
-                return "Brak wolnych terminów o podanej godzinie.";
+                return null;
             }
-            return finishDateTime.toString();
+            return finishDateTime.toOffsetDateTime().toString();
         }
-        return visit.getDateTime().toString();
+        return visit.getDateTime().toOffsetDateTime().toString();
     }
 }

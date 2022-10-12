@@ -8,10 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 import java.math.BigDecimal;
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.*;
 import java.util.HashSet;
 
 @SpringBootApplication
@@ -62,14 +59,20 @@ public class BeautyManagerServiceApplication {
             Treatment treatment7 = treatmentService.save(new Treatment(null, "Pedicure", description,
                     BigDecimal.valueOf(80), Duration.ofMinutes(45), category3));
 
-            visitService.save(new Visit(null, treatment1, client1, LocalDateTime.now().plusDays(5)));
-            visitService.save(new Visit(null, treatment2, client1, LocalDateTime.now().plusDays(6)));
-            visitService.save(new Visit(null, treatment3, client1, LocalDateTime.now().plusDays(3)));
-            visitService.save(new Visit(null, treatment3, client1, LocalDateTime.now().plusDays(7)));
-            visitService.save(new Visit(null, treatment3, client1, LocalDateTime.now().plusDays(8)));
-            visitService.save(new Visit(null, treatment1, client1, LocalDateTime.of(LocalDate.now().plusDays(2), LocalTime.of(10,0))));
-            visitService.save(new Visit(null, treatment1, client1, LocalDateTime.of(LocalDate.now().plusDays(2), LocalTime.of(11,40))));
-            visitService.save(new Visit(null, treatment1, client1, LocalDateTime.of(LocalDate.now().plusDays(2), LocalTime.of(14,0))));
+            ZoneOffset zone = ZoneOffset.ofHours(+2);
+            ZonedDateTime now = ZonedDateTime.now(zone);
+
+            visitService.save(new Visit(null, treatment1, client1, now.plusDays(5)));
+            visitService.save(new Visit(null, treatment2, client1, now.plusDays(6)));
+            visitService.save(new Visit(null, treatment3, client1, now.plusDays(3)));
+            visitService.save(new Visit(null, treatment3, client1, now.plusDays(7)));
+            visitService.save(new Visit(null, treatment3, client1, now.plusDays(8)));
+            visitService.save(new Visit(null, treatment1, client1, ZonedDateTime.of(
+                    LocalDate.now().plusDays(2), LocalTime.of(10, 0), zone)));
+            visitService.save(new Visit(null, treatment1, client1, ZonedDateTime.of(
+                    LocalDate.now().plusDays(2), LocalTime.of(11, 40), zone)));
+            visitService.save(new Visit(null, treatment1, client1, ZonedDateTime.of(
+                    LocalDate.now().plusDays(2), LocalTime.of(14, 0), zone)));
         };
     }
 
