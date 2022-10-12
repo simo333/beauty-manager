@@ -15,7 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 @Controller
 @RequestMapping("/api/visits")
@@ -44,8 +44,8 @@ public class VisitController {
     public ResponseEntity<Page<Visit>> getVisitsByClientAndDates(
             Pageable page,
             @PathVariable Long id,
-            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime since,
-            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime to) {
+            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime since,
+            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime to) {
         Page<Visit> visits = service.getVisitsByClientAndDate(id, since, to, page);
         return new ResponseEntity<>(visits, HttpStatus.OK);
     }
@@ -54,8 +54,8 @@ public class VisitController {
     @GetMapping("/date/{since}/{to}")
     public ResponseEntity<Page<Visit>> getVisitsByDates(
             Pageable page,
-            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime since,
-            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime to) {
+            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime since,
+            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime to) {
         Page<Visit> visits = service.getVisitsByDate(since, to, page);
         return new ResponseEntity<>(visits, HttpStatus.OK);
     }
@@ -69,7 +69,6 @@ public class VisitController {
 
     @PostMapping
     public ResponseEntity<Visit> saveVisit(@RequestBody @Valid Visit visit) {
-        log.info("visit date {}", visit.getDateTime());
         Visit saved = service.save(visit);
         return new ResponseEntity<>(saved, HttpStatus.CREATED);
     }
