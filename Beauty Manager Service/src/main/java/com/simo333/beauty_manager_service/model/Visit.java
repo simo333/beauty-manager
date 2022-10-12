@@ -6,8 +6,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.Future;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
 @Entity
@@ -32,7 +31,7 @@ public class Visit {
 
     @PrePersist
     public void prePersist() {
-        bookedAt = ZonedDateTime.now(ZoneId.of("Europe/Warsaw"));
+        bookedAt = ZonedDateTime.now(ZoneOffset.ofHours(+2));
     }
 
     public Visit(Long id, Treatment treatment, Client client, ZonedDateTime dateTime) {

@@ -12,7 +12,6 @@ import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZonedDateTime;
 import java.util.Comparator;
@@ -121,8 +120,8 @@ public class VisitServiceImpl implements VisitService {
             if (finishDateTime.toLocalTime().isAfter(LocalTime.of(16, 30))) {
                 return null;
             }
-            return finishDateTime.toString();
+            return finishDateTime.toOffsetDateTime().toString();
         }
-        return visit.getDateTime().toString();
+        return visit.getDateTime().toOffsetDateTime().toString();
     }
 }

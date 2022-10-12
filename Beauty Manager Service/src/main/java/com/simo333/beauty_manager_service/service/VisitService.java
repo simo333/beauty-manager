@@ -5,7 +5,6 @@ import com.simo333.beauty_manager_service.model.Visit;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 
 public interface VisitService {

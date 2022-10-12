@@ -59,7 +59,7 @@ public class BeautyManagerServiceApplication {
             Treatment treatment7 = treatmentService.save(new Treatment(null, "Pedicure", description,
                     BigDecimal.valueOf(80), Duration.ofMinutes(45), category3));
 
-            ZoneId zone = ZoneId.of("Europe/Warsaw");
+            ZoneOffset zone = ZoneOffset.ofHours(+2);
             ZonedDateTime now = ZonedDateTime.now(zone);
 
             visitService.save(new Visit(null, treatment1, client1, now.plusDays(5)));
@@ -68,11 +68,11 @@ public class BeautyManagerServiceApplication {
             visitService.save(new Visit(null, treatment3, client1, now.plusDays(7)));
             visitService.save(new Visit(null, treatment3, client1, now.plusDays(8)));
             visitService.save(new Visit(null, treatment1, client1, ZonedDateTime.of(
-                    LocalDate.now().plusDays(2), LocalTime.of(10,0), zone)));
+                    LocalDate.now().plusDays(2), LocalTime.of(10, 0), zone)));
             visitService.save(new Visit(null, treatment1, client1, ZonedDateTime.of(
-                    LocalDate.now().plusDays(2), LocalTime.of(11,40), zone)));
+                    LocalDate.now().plusDays(2), LocalTime.of(11, 40), zone)));
             visitService.save(new Visit(null, treatment1, client1, ZonedDateTime.of(
-                    LocalDate.now().plusDays(2), LocalTime.of(14,0), zone)));
+                    LocalDate.now().plusDays(2), LocalTime.of(14, 0), zone)));
         };
     }
 
