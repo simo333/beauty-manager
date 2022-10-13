@@ -19,6 +19,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @RestControllerAdvice
 public class ApiExceptionHandler {
@@ -53,7 +54,7 @@ public class ApiExceptionHandler {
 
     @ExceptionHandler(value = HttpMessageNotReadableException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ExceptionResponse handleHttpMessageNotReadableException(HttpMessageNotReadableException ex, WebRequest request) {
+    public ExceptionResponse handleHttpMessageNotReadableException(WebRequest request) {
         String message = "Request body is missing or some of inputs are incorrect.";
         return new ExceptionResponse(
                 HttpStatus.BAD_REQUEST,
@@ -79,8 +80,8 @@ public class ApiExceptionHandler {
 
     @ExceptionHandler(value = SQLIntegrityConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ExceptionResponse handleSQLIntegrityConstraintViolationException(SQLIntegrityConstraintViolationException ex, WebRequest request) {
-        String message = "Ta nazwa jest już zajęta.";
+    public ExceptionResponse handleSQLIntegrityConstraintViolationException(WebRequest request) {
+        String message = "Cannot delete or update a parent row: a foreign key constraint fails.";
         return new ExceptionResponse(
                 HttpStatus.BAD_REQUEST,
                 message,
@@ -101,7 +102,7 @@ public class ApiExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionResponse handleHttpRequestMethodNotSupportedException(MethodArgumentTypeMismatchException ex, WebRequest request) {
         String message = String.format("The parameter '%s' of value '%s' could not be converted to type '%s'",
-                ex.getName(), ex.getValue(), ex.getRequiredType().getSimpleName());
+                ex.getName(), ex.getValue(), Objects.requireNonNull(ex.getRequiredType()).getSimpleName());
         return new ExceptionResponse(
                 HttpStatus.BAD_REQUEST,
                 message,
