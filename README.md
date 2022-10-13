@@ -5,11 +5,11 @@ Application that helps managing company from beauty industry.
 
 ### FEATURES:
 * Sign up and sign in users
-* Managing clients
-* Managing users
-* Managing treatments and their categories
-* Managing visits
-* Booking a new visit (as guest, as logged user, as admin - book for other clients)
+* Manage clients
+* Manage users
+* Manage treatments and their categories
+* Manage visits
+* Book an appointment (as guest, as logged user, as admin - book for other clients)
 
 
 ### USED TECHNOLOGIES:
