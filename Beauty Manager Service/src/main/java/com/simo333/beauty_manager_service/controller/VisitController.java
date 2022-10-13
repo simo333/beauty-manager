@@ -18,7 +18,7 @@ import javax.validation.Valid;
 import java.time.ZonedDateTime;
 
 @Controller
-@RequestMapping("/api/visits")
+@RequestMapping("/api/appointments")
 @RequiredArgsConstructor
 @Slf4j
 public class VisitController {

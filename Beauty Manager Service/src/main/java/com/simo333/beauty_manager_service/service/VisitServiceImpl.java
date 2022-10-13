@@ -106,8 +106,8 @@ public class VisitServiceImpl implements VisitService {
 
         getNextFreeTime(visit);
 
-        log.info("Found: {}", allByDateTimeBetween.toString());
         log.info("Check if busy: '{}' to '{}'.", visit.getDateTime(), treatmentFinishTime);
+        log.info("Found visits: {}", allByDateTimeBetween.toString());
         return repository.existsByDateTimeBetween(visit.getDateTime(), treatmentFinishTime);
     }
 
