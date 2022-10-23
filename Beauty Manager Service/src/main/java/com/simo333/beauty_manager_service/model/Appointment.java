@@ -10,10 +10,10 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
 @Entity
-@Table(name = "visits")
+@Table(name = "appointments")
 @Data
 @NoArgsConstructor
-public class Visit {
+public class Appointment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -34,7 +34,7 @@ public class Visit {
         bookedAt = ZonedDateTime.now(ZoneOffset.ofHours(+2));
     }
 
-    public Visit(Long id, Treatment treatment, Client client, ZonedDateTime dateTime) {
+    public Appointment(Long id, Treatment treatment, Client client, ZonedDateTime dateTime) {
         this.id = id;
         this.treatment = treatment;
         this.client = client;

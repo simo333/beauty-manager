@@ -1,8 +1,8 @@
 package com.simo333.beauty_manager_service.controller;
 
 import com.simo333.beauty_manager_service.dto.FreeBusyResponse;
-import com.simo333.beauty_manager_service.model.Visit;
-import com.simo333.beauty_manager_service.service.VisitServiceImpl;
+import com.simo333.beauty_manager_service.model.Appointment;
+import com.simo333.beauty_manager_service.service.AppointmentServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -21,76 +21,76 @@ import java.time.ZonedDateTime;
 @RequestMapping("/api/appointments")
 @RequiredArgsConstructor
 @Slf4j
-public class VisitController {
+public class AppointmentController {
 
-    private final VisitServiceImpl service;
+    private final AppointmentServiceImpl service;
 
     @Secured("ROLE_ADMIN")
     @GetMapping
-    public ResponseEntity<Page<Visit>> getVisits(Pageable page) {
-        Page<Visit> visits = service.getVisitsPage(page);
-        return new ResponseEntity<>(visits, HttpStatus.OK);
+    public ResponseEntity<Page<Appointment>> getAppointments(Pageable page) {
+        Page<Appointment> appointments = service.getAppointmentsPage(page);
+        return new ResponseEntity<>(appointments, HttpStatus.OK);
     }
 
     @Secured({"ROLE_USER", "ROLE_ADMIN"})
     @GetMapping("/client/{id}")
-    public ResponseEntity<Page<Visit>> getVisitsByClient(Pageable page, @PathVariable Long id) {
-        Page<Visit> visits = service.getVisitsByClient(id, page);
-        return new ResponseEntity<>(visits, HttpStatus.OK);
+    public ResponseEntity<Page<Appointment>> getAppointmentsByClient(Pageable page, @PathVariable Long id) {
+        Page<Appointment> appointments = service.getAppointmentsByClient(id, page);
+        return new ResponseEntity<>(appointments, HttpStatus.OK);
     }
 
     @Secured({"ROLE_USER", "ROLE_ADMIN"})
     @GetMapping("/client/{id}/date/{since}/{to}")
-    public ResponseEntity<Page<Visit>> getVisitsByClientAndDates(
+    public ResponseEntity<Page<Appointment>> getAppointmentsByClientAndDates(
             Pageable page,
             @PathVariable Long id,
             @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime since,
             @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime to) {
-        Page<Visit> visits = service.getVisitsByClientAndDate(id, since, to, page);
-        return new ResponseEntity<>(visits, HttpStatus.OK);
+        Page<Appointment> appointments = service.getAppointmentsByClientAndDate(id, since, to, page);
+        return new ResponseEntity<>(appointments, HttpStatus.OK);
     }
 
     @Secured("ROLE_ADMIN")
     @GetMapping("/date/{since}/{to}")
-    public ResponseEntity<Page<Visit>> getVisitsByDates(
+    public ResponseEntity<Page<Appointment>> getAppointmentsByDates(
             Pageable page,
             @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime since,
             @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime to) {
-        Page<Visit> visits = service.getVisitsByDate(since, to, page);
-        return new ResponseEntity<>(visits, HttpStatus.OK);
+        Page<Appointment> appointments = service.getAppointmentsByDate(since, to, page);
+        return new ResponseEntity<>(appointments, HttpStatus.OK);
     }
 
     @Secured({"ROLE_USER", "ROLE_ADMIN"})
     @GetMapping("/{id}")
-    public ResponseEntity<Visit> getVisitById(@PathVariable Long id) {
-        Visit visit = service.getOne(id);
-        return new ResponseEntity<>(visit, HttpStatus.OK);
+    public ResponseEntity<Appointment> getAppointmentById(@PathVariable Long id) {
+        Appointment appointment = service.getOne(id);
+        return new ResponseEntity<>(appointment, HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<Visit> saveVisit(@RequestBody @Valid Visit visit) {
-        Visit saved = service.save(visit);
+    public ResponseEntity<Appointment> saveAppointment(@RequestBody @Valid Appointment appointment) {
+        Appointment saved = service.save(appointment);
         return new ResponseEntity<>(saved, HttpStatus.CREATED);
     }
 
     @Secured({"ROLE_USER", "ROLE_ADMIN"})
     @PutMapping("/{id}")
-    public ResponseEntity<Visit> updateVisit(@PathVariable Long id, @RequestBody @Valid Visit visit) {
-        visit.setId(id);
-        Visit updated = service.update(visit);
+    public ResponseEntity<Appointment> updateAppointment(@PathVariable Long id, @RequestBody @Valid Appointment appointment) {
+        appointment.setId(id);
+        Appointment updated = service.update(appointment);
         return new ResponseEntity<>(updated, HttpStatus.OK);
     }
 
     @Secured({"ROLE_USER", "ROLE_ADMIN"})
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteVisit(@PathVariable Long id) {
+    public ResponseEntity<?> deleteAppointment(@PathVariable Long id) {
         service.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/free-busy")
-    public ResponseEntity<FreeBusyResponse> checkIfFree(@Valid @RequestBody Visit visit) {
-        FreeBusyResponse response = service.checkFreeBusy(visit);
+    public ResponseEntity<FreeBusyResponse> checkIfFree(@Valid @RequestBody Appointment appointment) {
+        FreeBusyResponse response = service.checkFreeBusy(appointment);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
