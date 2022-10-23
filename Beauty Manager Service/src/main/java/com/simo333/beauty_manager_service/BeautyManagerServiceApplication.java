@@ -21,7 +21,7 @@ public class BeautyManagerServiceApplication {
     @Bean
     CommandLineRunner run(UserService userService, RoleService roleService, ClientService clientService,
                           TreatmentCategoryService categoryService, TreatmentService treatmentService,
-                          VisitService visitService) {
+                          AppointmentService appointmentService) {
         return args -> {
             String description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam consequat et mauris efficitur dictum. Aenean a finibus eros. Fusce venenatis venenatis magna, ac facilisis augue vestibulum nec. Interdum et malesuada fames ac ante ipsum primis in faucibus. Duis ut pretium neque, ut iaculis felis. Aenean eleifend risus ac aliquet consequat. Vestibulum scelerisque leo a enim malesuada vulputate. Praesent at nisi non ante consectetur placerat vel a urna. Integer tincidunt eros at leo dictum dictum in vel massa. Ut vel justo efficitur purus hendrerit dictum. Sed accumsan luctus maximus.";
             roleService.save(new Role(null, Role.Type.ROLE_USER));
@@ -62,16 +62,16 @@ public class BeautyManagerServiceApplication {
             ZoneOffset zone = ZoneOffset.ofHours(+2);
             ZonedDateTime now = ZonedDateTime.now(zone);
 
-            visitService.save(new Visit(null, treatment1, client1, now.plusDays(5)));
-            visitService.save(new Visit(null, treatment2, client1, now.plusDays(6)));
-            visitService.save(new Visit(null, treatment3, client1, now.plusDays(3)));
-            visitService.save(new Visit(null, treatment3, client1, now.plusDays(7)));
-            visitService.save(new Visit(null, treatment3, client1, now.plusDays(8)));
-            visitService.save(new Visit(null, treatment1, client1, ZonedDateTime.of(
+            appointmentService.save(new Appointment(null, treatment1, client1, now.plusDays(5)));
+            appointmentService.save(new Appointment(null, treatment2, client1, now.plusDays(6)));
+            appointmentService.save(new Appointment(null, treatment3, client1, now.plusDays(3)));
+            appointmentService.save(new Appointment(null, treatment3, client1, now.plusDays(7)));
+            appointmentService.save(new Appointment(null, treatment3, client1, now.plusDays(8)));
+            appointmentService.save(new Appointment(null, treatment1, client1, ZonedDateTime.of(
                     LocalDate.now().plusDays(2), LocalTime.of(10, 0), zone)));
-            visitService.save(new Visit(null, treatment1, client1, ZonedDateTime.of(
+            appointmentService.save(new Appointment(null, treatment1, client1, ZonedDateTime.of(
                     LocalDate.now().plusDays(2), LocalTime.of(11, 40), zone)));
-            visitService.save(new Visit(null, treatment1, client1, ZonedDateTime.of(
+            appointmentService.save(new Appointment(null, treatment1, client1, ZonedDateTime.of(
                     LocalDate.now().plusDays(2), LocalTime.of(14, 0), zone)));
         };
     }
