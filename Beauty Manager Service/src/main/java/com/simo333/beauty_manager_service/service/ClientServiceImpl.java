@@ -35,8 +35,12 @@ public class ClientServiceImpl implements ClientService {
     @Transactional
     @Override
     public Client save(Client client) {
-        log.info("Saving a new client: {}", client.getFullName());
-        return repository.save(client);
+        return repository.findByFirstNameAndLastNameAndPhoneNumber(
+                        client.getFirstName(), client.getLastName(), client.getPhoneNumber())
+                .orElseGet(() -> {
+                    log.info("SAVE: Client with given parameters has been found in database. For: {}", client);
+                    return repository.save(client);
+                });
     }
 
     @Override
