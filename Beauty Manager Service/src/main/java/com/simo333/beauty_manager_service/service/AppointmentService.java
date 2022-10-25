@@ -1,6 +1,7 @@
 package com.simo333.beauty_manager_service.service;
 
 
+import com.simo333.beauty_manager_service.dto.FreeBusyResponse;
 import com.simo333.beauty_manager_service.model.Appointment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,4 +24,6 @@ public interface AppointmentService {
     Appointment update(Appointment appointment);
 
     void deleteById(Long id);
+
+    FreeBusyResponse checkFreeBusy(Appointment appointment);
 }

@@ -2,7 +2,7 @@ package com.simo333.beauty_manager_service.controller;
 
 import com.simo333.beauty_manager_service.dto.AppUserPatch;
 import com.simo333.beauty_manager_service.model.AppUser;
-import com.simo333.beauty_manager_service.service.UserServiceImpl;
+import com.simo333.beauty_manager_service.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -10,18 +10,17 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-@Controller
+@RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
 @Slf4j
 public class UserController {
 
-    private final UserServiceImpl service;
+    private final UserService service;
 
     @Secured("ROLE_ADMIN")
     @GetMapping
