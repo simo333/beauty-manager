@@ -10,10 +10,10 @@ import com.simo333.beauty_manager_service.security.payload.request.LoginRequest;
 import com.simo333.beauty_manager_service.security.payload.request.RegisterRequest;
 import com.simo333.beauty_manager_service.security.payload.response.MessageResponse;
 import com.simo333.beauty_manager_service.security.payload.response.UserInfoResponse;
-import com.simo333.beauty_manager_service.service.ClientServiceImpl;
+import com.simo333.beauty_manager_service.service.ClientService;
 import com.simo333.beauty_manager_service.service.RefreshTokenService;
-import com.simo333.beauty_manager_service.service.RoleServiceImpl;
-import com.simo333.beauty_manager_service.service.UserServiceImpl;
+import com.simo333.beauty_manager_service.service.RoleService;
+import com.simo333.beauty_manager_service.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -41,9 +41,9 @@ import java.util.stream.Collectors;
 @Slf4j
 public class AuthController {
     private final AuthenticationManager authenticationManager;
-    private final UserServiceImpl userService;
-    private final RoleServiceImpl roleService;
-    private final ClientServiceImpl clientService;
+    private final UserService userService;
+    private final RoleService roleService;
+    private final ClientService clientService;
     private final JwtUtils jwtUtils;
 
     private final RefreshTokenService refreshTokenService;

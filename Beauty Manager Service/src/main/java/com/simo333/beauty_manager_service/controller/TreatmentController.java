@@ -1,7 +1,7 @@
 package com.simo333.beauty_manager_service.controller;
 
 import com.simo333.beauty_manager_service.model.Treatment;
-import com.simo333.beauty_manager_service.service.TreatmentServiceImpl;
+import com.simo333.beauty_manager_service.service.TreatmentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -9,19 +9,18 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/api/treatments")
 @RequiredArgsConstructor
 @Slf4j
 public class TreatmentController {
 
-    private final TreatmentServiceImpl service;
+    private final TreatmentService service;
 
     @GetMapping
     public ResponseEntity<Page<Treatment>> getTreatments(Pageable page) {

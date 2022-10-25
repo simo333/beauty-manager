@@ -2,7 +2,7 @@ package com.simo333.beauty_manager_service.controller;
 
 import com.simo333.beauty_manager_service.dto.FreeBusyResponse;
 import com.simo333.beauty_manager_service.model.Appointment;
-import com.simo333.beauty_manager_service.service.AppointmentServiceImpl;
+import com.simo333.beauty_manager_service.service.AppointmentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -11,19 +11,18 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.time.ZonedDateTime;
 
-@Controller
+@RestController
 @RequestMapping("/api/appointments")
 @RequiredArgsConstructor
 @Slf4j
 public class AppointmentController {
 
-    private final AppointmentServiceImpl service;
+    private final AppointmentService service;
 
     @Secured("ROLE_ADMIN")
     @GetMapping
