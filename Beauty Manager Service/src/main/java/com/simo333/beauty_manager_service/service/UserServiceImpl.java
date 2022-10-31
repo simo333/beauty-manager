@@ -36,7 +36,7 @@ public class UserServiceImpl implements UserService {
     private final RoleService roleService;
     @Autowired
     private RefreshTokenServiceImpl tokenService;
-    private final PasswordEncoder passwordEncode;
+    private final PasswordEncoder passwordEncoder;
 
 
     /* Avoiding circular references */
@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public AppUser save(AppUser user) {
         log.info("Saving a new user: {}", user.getEmail());
-        user.setPassword(passwordEncode.encode(user.getPassword()));
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
@@ -99,6 +99,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public AppUser update(AppUser user) {
         getUser(user.getId());
+        if (user.getPassword() != null) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
         log.info("Updating user with id '{}'", user.getId());
         return userRepository.save(user);
     }
@@ -110,7 +113,7 @@ public class UserServiceImpl implements UserService {
         AppUser user = getUser(principal.getUsername());
         Set<String> changes = new HashSet<>();
         if (patch.getPassword() != null) {
-            user.setPassword(passwordEncode.encode(patch.getPassword()));
+            user.setPassword(passwordEncoder.encode(patch.getPassword()));
             changes.add("password");
         }
         if (patch.getClient().getPhoneNumber() != null) {
@@ -127,7 +130,7 @@ public class UserServiceImpl implements UserService {
         AppUser user = getUser(id);
         Set<String> changes = new HashSet<>();
         if (patch.getPassword() != null) {
-            user.setPassword(passwordEncode.encode(patch.getPassword()));
+            user.setPassword(passwordEncoder.encode(patch.getPassword()));
             changes.add("password");
         }
         if (patch.getClient().getPhoneNumber() != null) {

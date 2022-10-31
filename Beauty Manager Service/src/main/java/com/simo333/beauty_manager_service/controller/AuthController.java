@@ -8,7 +8,6 @@ import com.simo333.beauty_manager_service.model.Role;
 import com.simo333.beauty_manager_service.security.jwt.JwtUtils;
 import com.simo333.beauty_manager_service.security.payload.request.LoginRequest;
 import com.simo333.beauty_manager_service.security.payload.request.RegisterRequest;
-import com.simo333.beauty_manager_service.security.payload.response.MessageResponse;
 import com.simo333.beauty_manager_service.security.payload.response.UserInfoResponse;
 import com.simo333.beauty_manager_service.service.ClientService;
 import com.simo333.beauty_manager_service.service.RefreshTokenService;
@@ -45,11 +44,10 @@ public class AuthController {
     private final RoleService roleService;
     private final ClientService clientService;
     private final JwtUtils jwtUtils;
-
     private final RefreshTokenService refreshTokenService;
 
     @PostMapping("/login")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<Object> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
 
@@ -70,11 +68,11 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequest registerRequest) {
+    public ResponseEntity<Object> registerUser(@Valid @RequestBody RegisterRequest registerRequest) {
         if (userService.existsByEmail(registerRequest.getEmail())) {
             return ResponseEntity
                     .badRequest()
-                    .body(new MessageResponse("Error: Email is already taken!"));
+                    .body("Error: Email is already taken!");
         }
 
         Client client = new Client();
@@ -90,11 +88,11 @@ public class AuthController {
 
         userService.save(user);
         log.info("User with email '{}' registered successfully.", user.getEmail());
-        return ResponseEntity.ok(new MessageResponse("User registered successfully."));
+        return ResponseEntity.ok("User registered successfully.");
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<?> logoutUser() {
+    public ResponseEntity<Object> logoutUser() {
         Object principle = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (!"anonymousUser".equals(principle.toString())) {
             AppUser loggedUser = userService.getUser(((User) principle).getUsername());
@@ -107,11 +105,11 @@ public class AuthController {
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
                 .header(HttpHeaders.SET_COOKIE, jwtRefreshCookie.toString())
-                .body(new MessageResponse("You've been signed out."));
+                .body("You've been signed out.");
     }
 
     @PostMapping("/refresh-token")
-    public ResponseEntity<?> refreshToken(HttpServletRequest request) {
+    public ResponseEntity<Object> refreshToken(HttpServletRequest request) {
         String refreshTokenCookie = jwtUtils.getJwtRefreshFromCookies(request);
         if ((refreshTokenCookie != null) && (refreshTokenCookie.length() > 0)) {
             RefreshToken refreshToken = refreshTokenService.findByToken(refreshTokenCookie);
@@ -121,7 +119,7 @@ public class AuthController {
                 return ResponseEntity.ok()
                         .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
                         .header(HttpHeaders.SET_COOKIE, refreshTokenCookie)
-                        .body(new MessageResponse("Token refreshed successfully."));
+                        .body("Token refreshed successfully.");
             }
         }
         log.error("Refresh token is not in database. For: {}", refreshTokenCookie);

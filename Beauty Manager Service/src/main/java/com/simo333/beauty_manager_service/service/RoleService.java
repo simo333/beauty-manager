@@ -8,7 +8,7 @@ public interface RoleService {
 
     List<Role> getAll();
 
-    Role getRole(Role.Type name);
+    Role getRole(Role.Type type);
 
     Role getRole(Long roleId);
 

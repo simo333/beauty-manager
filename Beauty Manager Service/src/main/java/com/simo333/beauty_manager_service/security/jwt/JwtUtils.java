@@ -23,6 +23,8 @@ public class JwtUtils {
     private String jwtCookie;
     @Value("${app.security.jwtRefreshCookieName}")
     private String jwtRefreshCookie;
+    @Value("${app.security.jwtCookieAgeSeconds}")
+    private Long jwtCookieAge;
 
     public ResponseCookie generateJwtCookie(String email) {
         String jwt = generateTokenFromUserEmail(email);
@@ -42,7 +44,7 @@ public class JwtUtils {
     }
 
     private ResponseCookie generateCookie(String name, String value, String path) {
-        return ResponseCookie.from(name, value).path(path).maxAge(24 * 60 * 60L).httpOnly(true).build();
+        return ResponseCookie.from(name, value).path(path).maxAge(jwtCookieAge).httpOnly(true).build();
     }
 
     public String getJwtFromCookies(HttpServletRequest request) {
