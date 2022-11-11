@@ -10,6 +10,7 @@ Application that helps managing company from beauty industry.
 * Manage treatments and their categories
 * Manage visits
 * Book an appointment (as guest, as logged user, as admin - book for other clients)
+* Manage access and refresh tokens
 
 
 ### USED TECHNOLOGIES:
