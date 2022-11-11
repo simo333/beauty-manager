@@ -1,14 +1,14 @@
 package com.simo333.beauty_manager_service.controller;
 
 import com.simo333.beauty_manager_service.exception.RefreshTokenException;
-import com.simo333.beauty_manager_service.model.AppUser;
 import com.simo333.beauty_manager_service.model.Client;
 import com.simo333.beauty_manager_service.model.RefreshToken;
 import com.simo333.beauty_manager_service.model.Role;
+import com.simo333.beauty_manager_service.model.User;
 import com.simo333.beauty_manager_service.security.jwt.JwtUtils;
-import com.simo333.beauty_manager_service.security.payload.request.LoginRequest;
-import com.simo333.beauty_manager_service.security.payload.request.RegisterRequest;
-import com.simo333.beauty_manager_service.security.payload.response.UserInfoResponse;
+import com.simo333.beauty_manager_service.security.payload.security.LoginRequest;
+import com.simo333.beauty_manager_service.security.payload.security.RegisterRequest;
+import com.simo333.beauty_manager_service.security.payload.security.UserInfoResponse;
 import com.simo333.beauty_manager_service.service.ClientService;
 import com.simo333.beauty_manager_service.service.RefreshTokenService;
 import com.simo333.beauty_manager_service.service.RoleService;
@@ -23,7 +23,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -81,7 +80,7 @@ public class AuthController {
         client.setPhoneNumber(registerRequest.getPhoneNumber());
         clientService.save(client);
 
-        AppUser user = new AppUser(null, registerRequest.getEmail(),
+        User user = new User(null, registerRequest.getEmail(),
                 registerRequest.getPassword(),
                 Set.of(roleService.getRole(Role.Type.ROLE_USER)),
                 client);
@@ -95,7 +94,7 @@ public class AuthController {
     public ResponseEntity<Object> logoutUser() {
         Object principle = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (!"anonymousUser".equals(principle.toString())) {
-            AppUser loggedUser = userService.getUser(((User) principle).getUsername());
+            User loggedUser = userService.getUser(((User) principle).getUsername());
             refreshTokenService.deleteByUser(loggedUser);
         }
 
@@ -118,7 +117,6 @@ public class AuthController {
                 log.info("Token refreshed successfully.");
                 return ResponseEntity.ok()
                         .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
-                        .header(HttpHeaders.SET_COOKIE, refreshTokenCookie)
                         .body("Token refreshed successfully.");
             }
         }

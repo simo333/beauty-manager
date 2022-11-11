@@ -63,7 +63,7 @@ public class TreatmentController {
 
     @Secured("ROLE_ADMIN")
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteTreatment(@PathVariable Long id) {
+    public ResponseEntity<Object> deleteTreatment(@PathVariable Long id) {
         service.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }

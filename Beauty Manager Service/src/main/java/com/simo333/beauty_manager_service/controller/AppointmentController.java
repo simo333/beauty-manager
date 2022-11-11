@@ -1,6 +1,6 @@
 package com.simo333.beauty_manager_service.controller;
 
-import com.simo333.beauty_manager_service.dto.FreeBusyResponse;
+import com.simo333.beauty_manager_service.security.payload.freebusy.FreeBusyResponse;
 import com.simo333.beauty_manager_service.model.Appointment;
 import com.simo333.beauty_manager_service.service.AppointmentService;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,6 @@ import java.time.ZonedDateTime;
 @RequiredArgsConstructor
 @Slf4j
 public class AppointmentController {
-
     private final AppointmentService service;
 
     @Secured("ROLE_ADMIN")
@@ -82,7 +81,7 @@ public class AppointmentController {
 
     @Secured({"ROLE_USER", "ROLE_ADMIN"})
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteAppointment(@PathVariable Long id) {
+    public ResponseEntity<Object> deleteAppointment(@PathVariable Long id) {
         service.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }

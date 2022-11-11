@@ -1,6 +1,6 @@
 package com.simo333.beauty_manager_service.service;
 
-import com.simo333.beauty_manager_service.model.AppUser;
+import com.simo333.beauty_manager_service.model.User;
 import com.simo333.beauty_manager_service.model.RefreshToken;
 
 public interface RefreshTokenService {
@@ -10,5 +10,5 @@ public interface RefreshTokenService {
 
     boolean verifyExpiration(RefreshToken token);
 
-    void deleteByUser(AppUser user);
+    void deleteByUser(User user);
 }

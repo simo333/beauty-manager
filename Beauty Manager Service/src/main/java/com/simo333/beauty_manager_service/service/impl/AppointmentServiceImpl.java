@@ -1,9 +1,11 @@
-package com.simo333.beauty_manager_service.service;
+package com.simo333.beauty_manager_service.service.impl;
 
-import com.simo333.beauty_manager_service.dto.FreeBusyResponse;
+import com.simo333.beauty_manager_service.security.payload.freebusy.FreeBusyResponse;
 import com.simo333.beauty_manager_service.exception.FreeBusyException;
 import com.simo333.beauty_manager_service.model.Appointment;
 import com.simo333.beauty_manager_service.repository.AppointmentRepository;
+import com.simo333.beauty_manager_service.service.AppointmentService;
+import com.simo333.beauty_manager_service.service.ClientService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -25,7 +27,7 @@ import java.util.Optional;
 public class AppointmentServiceImpl implements AppointmentService {
 
     private final AppointmentRepository repository;
-    private final ClientServiceImpl clientService;
+    private final ClientService clientService;
 
     @Override
     public Page<Appointment> getAppointmentsPage(Pageable page) {
