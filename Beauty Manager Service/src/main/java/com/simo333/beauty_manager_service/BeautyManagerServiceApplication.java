@@ -31,9 +31,9 @@ public class BeautyManagerServiceApplication {
             Client client2 = clientService.save(new Client(null, "Jim", "Carrey", "+49123456789"));
             Client client3 = clientService.save(new Client(null, "Arnold", "Schwarzenegger", "+45123456789"));
 
-            userService.save(new AppUser(null, "john@mail.com", "12345678", new HashSet<>(), client1));
-            userService.save(new AppUser(null, "jim@mail.com", "12345678", new HashSet<>(), client2));
-            userService.save(new AppUser(null, "arnold@mail.com", "12345678", new HashSet<>(), client3));
+            userService.save(new User(null, "john@mail.com", "12345678", new HashSet<>(), client1));
+            userService.save(new User(null, "jim@mail.com", "12345678", new HashSet<>(), client2));
+            userService.save(new User(null, "arnold@mail.com", "12345678", new HashSet<>(), client3));
 
             userService.addRoleToUser(1L, 1L);
             userService.addRoleToUser(2L, 2L);

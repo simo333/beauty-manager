@@ -1,7 +1,8 @@
-package com.simo333.beauty_manager_service.service;
+package com.simo333.beauty_manager_service.service.impl;
 
 import com.simo333.beauty_manager_service.model.Role;
 import com.simo333.beauty_manager_service.repository.RoleRepository;
+import com.simo333.beauty_manager_service.service.RoleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;

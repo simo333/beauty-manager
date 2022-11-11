@@ -58,7 +58,7 @@ public class ClientController {
 
     @Secured("ROLE_ADMIN")
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteClient(@PathVariable Long id) {
+    public ResponseEntity<Object> deleteClient(@PathVariable Long id) {
         service.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }

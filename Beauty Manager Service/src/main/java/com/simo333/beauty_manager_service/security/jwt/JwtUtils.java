@@ -69,11 +69,17 @@ public class JwtUtils {
     }
 
     public ResponseCookie getCleanJwtCookie() {
-        return ResponseCookie.from(jwtCookie, null).path("/api").build();
+        return ResponseCookie.from(jwtCookie, "")
+                .maxAge(0)
+                .path("/api")
+                .build();
     }
 
     public ResponseCookie getCleanJwtRefreshCookie() {
-        return ResponseCookie.from(jwtRefreshCookie, null).path("/api/auth/refresh-token").build();
+        return ResponseCookie.from(jwtRefreshCookie, "")
+                .maxAge(9)
+                .path("/api/auth/refresh-token")
+                .build();
     }
 
     public boolean validateJwtToken(String authToken) {

@@ -1,4 +1,4 @@
-package com.simo333.beauty_manager_service.dto;
+package com.simo333.beauty_manager_service.security.payload.freebusy;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

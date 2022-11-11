@@ -1,7 +1,7 @@
 package com.simo333.beauty_manager_service.service;
 
 
-import com.simo333.beauty_manager_service.dto.FreeBusyResponse;
+import com.simo333.beauty_manager_service.security.payload.freebusy.FreeBusyResponse;
 import com.simo333.beauty_manager_service.model.Appointment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

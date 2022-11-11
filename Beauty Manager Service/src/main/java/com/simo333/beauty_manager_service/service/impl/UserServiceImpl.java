@@ -1,26 +1,26 @@
-package com.simo333.beauty_manager_service.service;
+package com.simo333.beauty_manager_service.service.impl;
 
-import com.simo333.beauty_manager_service.dto.AppUserPatch;
-import com.simo333.beauty_manager_service.model.AppUser;
+import com.simo333.beauty_manager_service.security.payload.user.AppUserPatch;
+import com.simo333.beauty_manager_service.model.User;
 import com.simo333.beauty_manager_service.model.Role;
 import com.simo333.beauty_manager_service.repository.UserRepository;
+import com.simo333.beauty_manager_service.service.RefreshTokenService;
+import com.simo333.beauty_manager_service.service.RoleService;
+import com.simo333.beauty_manager_service.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.PostConstruct;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -34,34 +34,26 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final RoleService roleService;
-    @Autowired
-    private RefreshTokenServiceImpl tokenService;
+    private final RefreshTokenService tokenService;
     private final PasswordEncoder passwordEncoder;
-
-
-    /* Avoiding circular references */
-    @PostConstruct
-    public void init() {
-        tokenService.setUserService(this);
-    }
 
     @Transactional
     @Override
-    public AppUser save(AppUser user) {
+    public User save(User user) {
         log.info("Saving a new user: {}", user.getEmail());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
     @Override
-    public Page<AppUser> getUsersPage(Pageable page) {
+    public Page<User> getUsersPage(Pageable page) {
         log.info("Fetching all users");
         return userRepository.findAll(page);
     }
 
     @Override
-    public AppUser getUser(Long userId) {
-        AppUser user = userRepository.findById(userId).orElseThrow(() -> {
+    public User getUser(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> {
             log.error("User with id '{}' not found", userId);
             throw new ResourceNotFoundException("User not found. For id " + userId);
         });
@@ -70,8 +62,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public AppUser getUser(String email) {
-        AppUser user = userRepository.findByEmail(email).orElseThrow(() -> {
+    public User getUser(String email) {
+        User user = userRepository.findByEmail(email).orElseThrow(() -> {
             log.error("User with email '{}' not found", email);
             throw new ResourceNotFoundException("User not found.");
         });
@@ -91,13 +83,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        AppUser user = getUser(email);
+        User user = getUser(email);
         return buildUserDetails(user);
     }
 
     @Transactional
     @Override
-    public AppUser update(AppUser user) {
+    public User update(User user) {
         getUser(user.getId());
         if (user.getPassword() != null) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -108,9 +100,9 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public AppUser patchWithRoleUser(AppUserPatch patch) {
-        User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        AppUser user = getUser(principal.getUsername());
+    public User patchWithRoleUser(AppUserPatch patch) {
+        org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = getUser(principal.getUsername());
         Set<String> changes = new HashSet<>();
         if (patch.getPassword() != null) {
             user.setPassword(passwordEncoder.encode(patch.getPassword()));
@@ -126,8 +118,8 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public AppUser patchWithRoleAdmin(Long id, AppUserPatch patch) {
-        AppUser user = getUser(id);
+    public User patchWithRoleAdmin(Long id, AppUserPatch patch) {
+        User user = getUser(id);
         Set<String> changes = new HashSet<>();
         if (patch.getPassword() != null) {
             user.setPassword(passwordEncoder.encode(patch.getPassword()));
@@ -160,7 +152,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public void addRoleToUser(Long userId, Long roleId) {
-        AppUser user = getUser(userId);
+        User user = getUser(userId);
         Role role = roleService.getRole(roleId);
         log.info("Adding role '{}' to user '{}'", role.getName(), user.getEmail());
         user.getRoles().add(role);
@@ -169,18 +161,18 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public void removeRoleFromUser(Long userId, Long roleId) {
-        AppUser user = getUser(userId);
+        User user = getUser(userId);
         Role role = roleService.getRole(roleId);
         log.info("Removing role '{}' from user '{}'", role.getName(), user.getEmail());
         user.getRoles().remove(role);
     }
 
-    public static User buildUserDetails(AppUser user) {
+    public static org.springframework.security.core.userdetails.User buildUserDetails(User user) {
         Set<GrantedAuthority> authorities = user.getRoles().stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName().name()))
                 .collect(Collectors.toSet());
 
-        return new User(
+        return new org.springframework.security.core.userdetails.User(
                 user.getEmail(),
                 user.getPassword(),
                 authorities);

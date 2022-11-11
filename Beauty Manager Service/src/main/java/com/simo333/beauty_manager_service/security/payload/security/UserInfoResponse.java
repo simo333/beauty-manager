@@ -1,4 +1,4 @@
-package com.simo333.beauty_manager_service.security.payload.response;
+package com.simo333.beauty_manager_service.security.payload.security;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
