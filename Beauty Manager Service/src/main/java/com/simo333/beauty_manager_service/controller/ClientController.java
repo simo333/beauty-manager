@@ -1,6 +1,7 @@
 package com.simo333.beauty_manager_service.controller;
 
 import com.simo333.beauty_manager_service.model.Client;
+import com.simo333.beauty_manager_service.security.payload.client.ClientRequest;
 import com.simo333.beauty_manager_service.service.ClientService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,16 +44,15 @@ public class ClientController {
     }
 
     @PostMapping
-    public ResponseEntity<Client> saveClient(@RequestBody @Valid Client client) {
-        Client saved = service.save(client);
+    public ResponseEntity<Client> saveClient(@RequestBody @Valid ClientRequest request) {
+        Client saved = service.save(request);
         return new ResponseEntity<>(saved, HttpStatus.CREATED);
     }
 
     @Secured("ROLE_ADMIN")
     @PutMapping("/{id}")
-    public ResponseEntity<Client> updateClient(@PathVariable Long id, @RequestBody @Valid Client client) {
-        client.setId(id);
-        Client updated = service.update(client);
+    public ResponseEntity<Client> updateClient(@PathVariable Long id, @RequestBody @Valid ClientRequest request) {
+        Client updated = service.update(id, request);
         return new ResponseEntity<>(updated, HttpStatus.OK);
     }
 

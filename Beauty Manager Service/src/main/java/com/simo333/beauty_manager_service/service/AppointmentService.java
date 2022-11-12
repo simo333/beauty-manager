@@ -1,8 +1,8 @@
 package com.simo333.beauty_manager_service.service;
 
 
-import com.simo333.beauty_manager_service.security.payload.freebusy.FreeBusyResponse;
 import com.simo333.beauty_manager_service.model.Appointment;
+import com.simo333.beauty_manager_service.security.payload.appointment.AppointmentRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -17,13 +17,13 @@ public interface AppointmentService {
 
     Page<Appointment> getAppointmentsByDate(ZonedDateTime since, ZonedDateTime to, Pageable page);
 
+    Appointment save(AppointmentRequest request);
+
     Appointment save(Appointment appointment);
 
     Appointment getOne(Long id);
 
-    Appointment update(Appointment appointment);
+    Appointment update(Long id, AppointmentRequest request);
 
     void deleteById(Long id);
-
-    FreeBusyResponse checkFreeBusy(Appointment appointment);
 }

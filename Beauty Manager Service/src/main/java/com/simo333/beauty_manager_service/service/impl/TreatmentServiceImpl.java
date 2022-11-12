@@ -1,7 +1,9 @@
 package com.simo333.beauty_manager_service.service.impl;
 
+import com.simo333.beauty_manager_service.exception.NotAvailableException;
 import com.simo333.beauty_manager_service.model.Treatment;
 import com.simo333.beauty_manager_service.repository.TreatmentRepository;
+import com.simo333.beauty_manager_service.security.payload.treatment.TreatmentRequest;
 import com.simo333.beauty_manager_service.service.TreatmentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,7 +49,17 @@ public class TreatmentServiceImpl implements TreatmentService {
 
     @Transactional
     @Override
+    public Treatment save(TreatmentRequest request) {
+        checkNameAvailable(request.getName());
+        Treatment treatment = buildTreatment(request);
+        log.info("Saving a new treatment: {}", treatment.getName());
+        return repository.save(treatment);
+    }
+
+    @Transactional
+    @Override
     public Treatment save(Treatment treatment) {
+        checkNameAvailable(treatment.getName());
         log.info("Saving a new treatment: {}", treatment.getName());
         return repository.save(treatment);
     }
@@ -64,8 +76,13 @@ public class TreatmentServiceImpl implements TreatmentService {
 
     @Transactional
     @Override
-    public Treatment update(Treatment treatment) {
-        getOne(treatment.getId());
+    public Treatment update(Long id, TreatmentRequest request) {
+        Treatment one = getOne(id);
+        if (!one.getName().equals(request.getName())) {
+            checkNameAvailable(request.getName());
+        }
+        Treatment treatment = buildTreatment(request);
+        treatment.setId(id);
         log.info("Updating treatment with id '{}'", treatment.getId());
         return repository.save(treatment);
     }
@@ -75,5 +92,21 @@ public class TreatmentServiceImpl implements TreatmentService {
     public void deleteById(Long id) {
         log.info("Deleting treatment with id '{}'", id);
         repository.deleteById(id);
+    }
+
+    private void checkNameAvailable(String name) {
+        if (repository.existsByName(name)) {
+            throw new NotAvailableException(String.format("Treatment with name %s already exists.", name));
+        }
+    }
+
+    private Treatment buildTreatment(TreatmentRequest request) {
+        return Treatment.builder()
+                .name(request.getName())
+                .description(request.getDescription())
+                .duration(request.getDuration())
+                .price(request.getPrice())
+                .category(request.getCategory())
+                .build();
     }
 }

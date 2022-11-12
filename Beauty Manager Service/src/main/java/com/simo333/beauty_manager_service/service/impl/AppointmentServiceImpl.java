@@ -1,9 +1,9 @@
 package com.simo333.beauty_manager_service.service.impl;
 
-import com.simo333.beauty_manager_service.security.payload.freebusy.FreeBusyResponse;
 import com.simo333.beauty_manager_service.exception.FreeBusyException;
 import com.simo333.beauty_manager_service.model.Appointment;
 import com.simo333.beauty_manager_service.repository.AppointmentRepository;
+import com.simo333.beauty_manager_service.security.payload.appointment.AppointmentRequest;
 import com.simo333.beauty_manager_service.service.AppointmentService;
 import com.simo333.beauty_manager_service.service.ClientService;
 import lombok.RequiredArgsConstructor;
@@ -57,15 +57,19 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Transactional
     @Override
-    public Appointment save(Appointment appointment) {
-        if (appointment.getClient().getId() == null) {
-            if (clientService.exists(appointment.getClient())) {
-                appointment.setClient(clientService.getOne(appointment.getClient()));
-            } else {
-                appointment.setClient(clientService.save(appointment.getClient()));
-            }
-        }
+    public Appointment save(AppointmentRequest request) {
+        Appointment appointment = buildAppointment(request);
         checkFreeBusy(appointment);
+
+        log.info("Saving a new appointment with: {}", appointment);
+        return repository.save(appointment);
+    }
+
+    @Transactional
+    @Override
+    public Appointment save(Appointment appointment) {
+        checkFreeBusy(appointment);
+
         log.info("Saving a new appointment with: {}", appointment);
         return repository.save(appointment);
     }
@@ -82,8 +86,13 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Transactional
     @Override
-    public Appointment update(Appointment appointment) {
-        getOne(appointment.getId());
+    public Appointment update(Long id, AppointmentRequest request) {
+        Appointment one = getOne(id);
+        Appointment appointment = buildAppointment(request);
+        if (!(one.getDateTime().equals(request.getDateTime()) &&
+                one.getTreatment().equals(request.getTreatment()))) {
+            checkFreeBusy(appointment);
+        }
         log.info("Updating appointment with id '{}'", appointment.getId());
         return repository.save(appointment);
     }
@@ -95,11 +104,10 @@ public class AppointmentServiceImpl implements AppointmentService {
         repository.deleteById(id);
     }
 
-    public FreeBusyResponse checkFreeBusy(Appointment appointment) {
+    private void checkFreeBusy(Appointment appointment) {
         if (isBusy(appointment)) {
             throw new FreeBusyException(getNextFreeTime(appointment));
         }
-        return new FreeBusyResponse(isBusy(appointment), appointment.getDateTime().toString());
     }
 
     public boolean isBusy(Appointment appointment) {
@@ -126,4 +134,20 @@ public class AppointmentServiceImpl implements AppointmentService {
         }
         return appointment.getDateTime().toOffsetDateTime().toString();
     }
+
+    private Appointment buildAppointment(AppointmentRequest request) {
+        Appointment appointment = new Appointment();
+        if (request.getClient().getId() == null) {
+            if (clientService.exists(request.getClient())) {
+                appointment.setClient(clientService.getOne(request.getClient()));
+            } else {
+                appointment.setClient(clientService.save(request.getClient()));
+            }
+        }
+
+        appointment.setTreatment(request.getTreatment());
+        appointment.setDateTime(request.getDateTime());
+        return appointment;
+    }
+
 }
