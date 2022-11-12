@@ -11,7 +11,7 @@ import javax.validation.constraints.Size;
 @Getter
 @Setter
 @ToString
-public class AppUserPatch {
+public class UserPatch {
     @Email
     private String email;
     @Size(min = 8, max = 120)

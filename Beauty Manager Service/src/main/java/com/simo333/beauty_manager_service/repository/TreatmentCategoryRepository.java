@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TreatmentCategoryRepository extends JpaRepository<TreatmentCategory, Long> {
+    boolean existsByName(String name);
 }

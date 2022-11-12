@@ -74,11 +74,7 @@ public class AuthController {
                     .body("Error: Email is already taken!");
         }
 
-        Client client = new Client();
-        client.setFirstName(registerRequest.getFirstName());
-        client.setLastName(registerRequest.getLastName());
-        client.setPhoneNumber(registerRequest.getPhoneNumber());
-        clientService.save(client);
+        Client client = clientService.save(registerRequest);
 
         User user = new User(null, registerRequest.getEmail(),
                 registerRequest.getPassword(),

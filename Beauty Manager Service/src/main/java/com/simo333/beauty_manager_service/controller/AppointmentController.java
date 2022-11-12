@@ -1,7 +1,7 @@
 package com.simo333.beauty_manager_service.controller;
 
-import com.simo333.beauty_manager_service.security.payload.freebusy.FreeBusyResponse;
 import com.simo333.beauty_manager_service.model.Appointment;
+import com.simo333.beauty_manager_service.security.payload.appointment.AppointmentRequest;
 import com.simo333.beauty_manager_service.service.AppointmentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -66,16 +66,16 @@ public class AppointmentController {
     }
 
     @PostMapping
-    public ResponseEntity<Appointment> saveAppointment(@RequestBody @Valid Appointment appointment) {
-        Appointment saved = service.save(appointment);
+    public ResponseEntity<Appointment> saveAppointment(@RequestBody @Valid AppointmentRequest request) {
+        Appointment saved = service.save(request);
         return new ResponseEntity<>(saved, HttpStatus.CREATED);
     }
 
     @Secured({"ROLE_USER", "ROLE_ADMIN"})
     @PutMapping("/{id}")
-    public ResponseEntity<Appointment> updateAppointment(@PathVariable Long id, @RequestBody @Valid Appointment appointment) {
-        appointment.setId(id);
-        Appointment updated = service.update(appointment);
+    public ResponseEntity<Appointment> updateAppointment(@PathVariable Long id,
+                                                         @RequestBody @Valid AppointmentRequest request) {
+        Appointment updated = service.update(id, request);
         return new ResponseEntity<>(updated, HttpStatus.OK);
     }
 
@@ -84,12 +84,6 @@ public class AppointmentController {
     public ResponseEntity<Object> deleteAppointment(@PathVariable Long id) {
         service.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @PostMapping("/free-busy")
-    public ResponseEntity<FreeBusyResponse> checkIfFree(@Valid @RequestBody Appointment appointment) {
-        FreeBusyResponse response = service.checkFreeBusy(appointment);
-        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 }

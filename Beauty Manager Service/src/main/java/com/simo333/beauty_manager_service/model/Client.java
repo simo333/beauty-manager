@@ -1,6 +1,7 @@
 package com.simo333.beauty_manager_service.model;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,6 +14,7 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(name = "clients")
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Client {

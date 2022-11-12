@@ -1,5 +1,6 @@
 package com.simo333.beauty_manager_service.service.impl;
 
+import com.simo333.beauty_manager_service.exception.NotAvailableException;
 import com.simo333.beauty_manager_service.model.TreatmentCategory;
 import com.simo333.beauty_manager_service.repository.TreatmentCategoryRepository;
 import com.simo333.beauty_manager_service.service.TreatmentCategoryService;
@@ -36,6 +37,7 @@ public class TreatmentCategoryServiceImpl implements TreatmentCategoryService {
     @Transactional
     @Override
     public TreatmentCategory save(TreatmentCategory category) {
+        checkNameAvailable(category.getName());
         log.info("Saving a new treatment category: {}", category.getName());
         return repository.save(category);
     }
@@ -53,7 +55,6 @@ public class TreatmentCategoryServiceImpl implements TreatmentCategoryService {
     @Transactional
     @Override
     public TreatmentCategory update(TreatmentCategory category) {
-        getOne(category.getId());
         log.info("Updating TreatmentCategory with id '{}'", category.getId());
         return repository.save(category);
     }
@@ -63,5 +64,11 @@ public class TreatmentCategoryServiceImpl implements TreatmentCategoryService {
     public void deleteById(Long id) {
         log.info("Deleting TreatmentCategory with id '{}'", id);
         repository.deleteById(id);
+    }
+
+    void checkNameAvailable(String name) {
+        if (repository.existsByName(name)) {
+            throw new NotAvailableException(String.format("Category with name %s already exists.", name));
+        }
     }
 }

@@ -127,5 +127,13 @@ public class ApiExceptionHandler {
                 request.getDescription(false));
     }
 
+    @ExceptionHandler(value = NotAvailableException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionResponse handleNameNotAvailableException(NotAvailableException ex, WebRequest request) {
+        return new ExceptionResponse(
+                HttpStatus.BAD_REQUEST,
+                ex.getMessage(),
+                request.getDescription(false));
+    }
 
 }
