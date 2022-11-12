@@ -1,5 +1,6 @@
 package com.simo333.beauty_manager_service.model;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

@@ -1,6 +1,7 @@
 package com.simo333.beauty_manager_service.service;
 
 import com.simo333.beauty_manager_service.model.Treatment;
+import com.simo333.beauty_manager_service.security.payload.treatment.TreatmentRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -15,11 +16,13 @@ public interface TreatmentService {
 
     List<Treatment> getTreatmentsByCategoryId(Long categoryId);
 
+    Treatment save(TreatmentRequest request);
+
     Treatment save(Treatment treatment);
 
     Treatment getOne(Long id);
 
-    Treatment update(Treatment treatment);
+    Treatment update(Long id, TreatmentRequest request);
 
     void deleteById(Long id);
 }

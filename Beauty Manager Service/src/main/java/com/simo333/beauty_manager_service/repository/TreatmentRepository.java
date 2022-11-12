@@ -15,4 +15,5 @@ public interface TreatmentRepository extends JpaRepository<Treatment, Long> {
 
     Page<Treatment> findAllByCategoryId(Long categoryId, Pageable page);
 
+    boolean existsByName(String name);
 }

@@ -1,6 +1,6 @@
 package com.simo333.beauty_manager_service.controller;
 
-import com.simo333.beauty_manager_service.security.payload.user.AppUserPatch;
+import com.simo333.beauty_manager_service.security.payload.user.UserPatch;
 import com.simo333.beauty_manager_service.model.User;
 import com.simo333.beauty_manager_service.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -43,31 +43,16 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @Secured("ROLE_ADMIN")
-    @PostMapping
-    public ResponseEntity<User> saveUser(@RequestBody @Valid User user) {
-        User saved = service.save(user);
-        return new ResponseEntity<>(saved, HttpStatus.CREATED);
-    }
-
-    @Secured("ROLE_ADMIN")
-    @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody @Valid User user) {
-        user.setId(id);
-        User updated = service.update(user);
-        return new ResponseEntity<>(updated, HttpStatus.OK);
-    }
-
     @Secured("ROLE_USER")
     @PatchMapping
-    public ResponseEntity<User> patchUserWithRoleUser(@RequestBody @Valid AppUserPatch patch) {
+    public ResponseEntity<User> patchUserWithRoleUser(@RequestBody @Valid UserPatch patch) {
         User updated = service.patchWithRoleUser(patch);
         return new ResponseEntity<>(updated, HttpStatus.OK);
     }
 
     @Secured("ROLE_ADMIN")
     @PatchMapping("/{id}")
-    public ResponseEntity<User> patchUserWithRoleAdmin(@PathVariable Long id, @RequestBody @Valid AppUserPatch patch) {
+    public ResponseEntity<User> patchUserWithRoleAdmin(@PathVariable Long id, @RequestBody @Valid UserPatch patch) {
         User updated = service.patchWithRoleAdmin(id, patch);
         return new ResponseEntity<>(updated, HttpStatus.OK);
     }

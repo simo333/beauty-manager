@@ -1,6 +1,6 @@
 package com.simo333.beauty_manager_service.service;
 
-import com.simo333.beauty_manager_service.security.payload.user.AppUserPatch;
+import com.simo333.beauty_manager_service.security.payload.user.UserPatch;
 import com.simo333.beauty_manager_service.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,9 +20,9 @@ public interface UserService extends UserDetailsService {
 
     User update(User user);
 
-    User patchWithRoleUser(AppUserPatch patch);
+    User patchWithRoleUser(UserPatch patch);
 
-    User patchWithRoleAdmin(Long id, AppUserPatch patch);
+    User patchWithRoleAdmin(Long id, UserPatch patch);
 
     void deleteById(long userId);
 

@@ -1,7 +1,9 @@
 package com.simo333.beauty_manager_service.service.impl;
 
+import com.simo333.beauty_manager_service.exception.NotAvailableException;
 import com.simo333.beauty_manager_service.model.Client;
 import com.simo333.beauty_manager_service.repository.ClientRepository;
+import com.simo333.beauty_manager_service.security.payload.client.ClientRequest;
 import com.simo333.beauty_manager_service.service.ClientService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,13 +37,20 @@ public class ClientServiceImpl implements ClientService {
 
     @Transactional
     @Override
+    public Client save(ClientRequest request) {
+        if (checkAvailable(request)) {
+            return repository.save(buildClient(request));
+        }
+        throw new NotAvailableException("Client with these parameters already exists.");
+    }
+
+    @Transactional
+    @Override
     public Client save(Client client) {
-        return repository.findByFirstNameAndLastNameAndPhoneNumber(
-                        client.getFirstName(), client.getLastName(), client.getPhoneNumber())
-                .orElseGet(() -> {
-                    log.info("SAVE: Client with given parameters has been found in database. For: {}", client);
-                    return repository.save(client);
-                });
+        if (checkAvailable(client)) {
+            return repository.save(client);
+        }
+        throw new NotAvailableException("Client with these parameters already exists.");
     }
 
     @Override
@@ -77,10 +86,15 @@ public class ClientServiceImpl implements ClientService {
 
     @Transactional
     @Override
-    public Client update(Client client) {
-        getOne(client.getId());
-        log.info("Updating client with id '{}'", client.getId());
-        return repository.save(client);
+    public Client update(Long id, ClientRequest request) {
+        getOne(id);
+        if (checkAvailable(request)) {
+            Client client = buildClient(request);
+            client.setId(id);
+            log.info("Updating client with id '{}'", id);
+            return repository.save(client);
+        }
+        throw new NotAvailableException("Client with these parameters already exists.");
     }
 
     @Transactional
@@ -108,5 +122,23 @@ public class ClientServiceImpl implements ClientService {
             return true;
         }
         return false;
+    }
+
+    private Client buildClient(ClientRequest request) {
+        return Client.builder()
+                .firstName(request.getFirstName())
+                .lastName(request.getFirstName())
+                .phoneNumber(request.getPhoneNumber())
+                .build();
+    }
+
+    private boolean checkAvailable(ClientRequest request) {
+        return !repository.existsByFirstNameAndLastNameAndPhoneNumber(
+                request.getFirstName(), request.getLastName(), request.getPhoneNumber());
+    }
+
+    private boolean checkAvailable(Client client) {
+        return !repository.existsByFirstNameAndLastNameAndPhoneNumber(
+                client.getFirstName(), client.getLastName(), client.getPhoneNumber());
     }
 }

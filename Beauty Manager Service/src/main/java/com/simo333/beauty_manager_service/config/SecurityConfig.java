@@ -5,6 +5,7 @@ import com.simo333.beauty_manager_service.security.jwt.AuthTokenFilter;
 import com.simo333.beauty_manager_service.service.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -34,12 +35,12 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, AuthEntryPointJwt unauthorizedHandler, UserService userService) throws Exception {
-        String[] permitAllPaths = {"/api/test/**", "/api/clients/**", "/api/categories/**", "/api/treatments/**", "/api/visits"};
+        String[] permitAllPaths = {"/api/clients/**", "/api/categories/**", "/api/treatments/**", "/api/visits", "/api/auth/**"};
         http.cors().configurationSource(corsConfiguration());
         http.csrf().disable()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                .authorizeRequests().antMatchers("/api/auth/**").permitAll()
+                .authorizeRequests().antMatchers(HttpMethod.POST, "/api/appointments").permitAll()
                 .antMatchers(permitAllPaths).permitAll()
                 .anyRequest().authenticated();
 

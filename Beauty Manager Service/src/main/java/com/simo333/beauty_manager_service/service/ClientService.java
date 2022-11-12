@@ -1,6 +1,7 @@
 package com.simo333.beauty_manager_service.service;
 
 import com.simo333.beauty_manager_service.model.Client;
+import com.simo333.beauty_manager_service.security.payload.client.ClientRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -12,6 +13,8 @@ public interface ClientService {
 
     List<Client> getClients();
 
+    Client save(ClientRequest request);
+
     Client save(Client client);
 
     Client getOne(Long id);
@@ -20,7 +23,7 @@ public interface ClientService {
 
     Client getOne(Client client);
 
-    Client update(Client client);
+    Client update(Long id, ClientRequest request);
 
     void deleteById(Long id);
 

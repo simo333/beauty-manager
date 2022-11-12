@@ -1,6 +1,7 @@
 package com.simo333.beauty_manager_service.controller;
 
 import com.simo333.beauty_manager_service.model.TreatmentCategory;
+import com.simo333.beauty_manager_service.security.payload.treatment_category.TreatmentCategoryRequest;
 import com.simo333.beauty_manager_service.service.TreatmentCategoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,7 +43,8 @@ public class TreatmentCategoryController {
 
     @Secured("ROLE_ADMIN")
     @PostMapping
-    public ResponseEntity<TreatmentCategory> saveCategory(@RequestBody @Valid TreatmentCategory category) {
+    public ResponseEntity<TreatmentCategory> saveCategory(@RequestBody @Valid TreatmentCategoryRequest request) {
+        TreatmentCategory category = new TreatmentCategory(null, request.getName());
         TreatmentCategory saved = service.save(category);
         return new ResponseEntity<>(saved, HttpStatus.CREATED);
     }
@@ -50,8 +52,8 @@ public class TreatmentCategoryController {
     @Secured("ROLE_ADMIN")
     @PutMapping("/{id}")
     public ResponseEntity<TreatmentCategory> updateCategory(@PathVariable Long id,
-                                                            @RequestBody @Valid TreatmentCategory category) {
-        category.setId(id);
+                                                            @RequestBody @Valid TreatmentCategoryRequest request) {
+        TreatmentCategory category = new TreatmentCategory(id, request.getName());
         TreatmentCategory updated = service.update(category);
         return new ResponseEntity<>(updated, HttpStatus.OK);
     }
