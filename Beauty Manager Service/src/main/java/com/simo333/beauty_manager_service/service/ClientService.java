@@ -19,8 +19,6 @@ public interface ClientService {
 
     Client getOne(Long id);
 
-    Client getOne(String phoneNumber);
-
     Client getOne(Client client);
 
     Client update(Long id, ClientRequest request);

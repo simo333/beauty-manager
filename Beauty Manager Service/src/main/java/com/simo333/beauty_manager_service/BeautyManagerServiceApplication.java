@@ -6,6 +6,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
 
 import java.math.BigDecimal;
 import java.time.*;
@@ -18,6 +19,7 @@ public class BeautyManagerServiceApplication {
         SpringApplication.run(BeautyManagerServiceApplication.class, args);
     }
 
+    @Profile("!test")
     @Bean
     CommandLineRunner run(UserService userService, RoleService roleService, ClientService clientService,
                           TreatmentCategoryService categoryService, TreatmentService treatmentService,

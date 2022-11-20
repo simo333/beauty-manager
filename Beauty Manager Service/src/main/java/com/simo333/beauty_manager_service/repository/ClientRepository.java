@@ -13,7 +13,5 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
 
     boolean existsByFirstNameAndLastNameAndPhoneNumber(String firstName, String lastName, String phoneNumber);
 
-    Optional<Client> findDistinctByPhoneNumber(String phoneNumber);
-
     Optional<Client> findByFirstNameAndLastNameAndPhoneNumber(String firstName, String lastName, String phoneNumber);
 }
