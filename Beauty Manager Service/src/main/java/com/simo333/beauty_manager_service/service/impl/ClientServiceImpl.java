@@ -55,16 +55,6 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public Client getOne(String phoneNumber) {
-        Client client = repository.findDistinctByPhoneNumber(phoneNumber).orElseThrow(() -> {
-            log.error("Client with phone number '{}' not found", phoneNumber);
-            throw new ResourceNotFoundException("Client not found. For phone number: " + phoneNumber);
-        });
-        log.info("Client '{}' has been found.", client.getFullName());
-        return client;
-    }
-
-    @Override
     public Client getOne(Client client) {
         Client found = repository.findByFirstNameAndLastNameAndPhoneNumber(
                 client.getFirstName(), client.getLastName(), client.getPhoneNumber()).orElseThrow(() -> {
