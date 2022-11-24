@@ -12,6 +12,7 @@ import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.Duration;
+import java.util.Objects;
 
 @Entity
 @Table(name = "treatments")
@@ -38,4 +39,17 @@ public class Treatment {
     @ManyToOne
     @JoinColumn(name = "treatment_category_id")
     private TreatmentCategory category;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Treatment treatment = (Treatment) o;
+        return id.equals(treatment.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }
