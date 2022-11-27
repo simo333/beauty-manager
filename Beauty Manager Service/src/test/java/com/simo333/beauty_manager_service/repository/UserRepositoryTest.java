@@ -25,7 +25,7 @@ class UserRepositoryTest {
     private ClientRepository clientRepository;
 
     @Test
-    void findByEmail() {
+    void shouldFindUser() {
         // given
         Client client = new Client(null, "name", "lastName", "+11123456789");
         Role role = new Role(null, Role.Type.ROLE_USER);
@@ -48,7 +48,7 @@ class UserRepositoryTest {
     }
 
     @Test
-    void existsByEmail() {
+    void shouldReturnTrue() {
         // given
         Client client = new Client(null, "name", "lastName", "+11123456789");
         Role role = new Role(null, Role.Type.ROLE_ADMIN);
