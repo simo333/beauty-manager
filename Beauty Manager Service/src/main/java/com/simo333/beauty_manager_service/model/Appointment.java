@@ -9,6 +9,7 @@ import javax.validation.constraints.Future;
 import javax.validation.constraints.NotNull;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.util.Objects;
 
 @Entity
 @Table(name = "appointments")
@@ -44,5 +45,18 @@ public class Appointment {
 
     public ZonedDateTime getFinishDateTime() {
         return dateTime.plus(treatment.getDuration());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Appointment that = (Appointment) o;
+        return id.equals(that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }
