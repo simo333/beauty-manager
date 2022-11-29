@@ -21,6 +21,8 @@ Application that helps managing company from beauty industry.
 * JWT
 * Angular 14 (TypeScript 4.8.4)
 * HTML / CSS (Bootstrap 5)
+* JUnit 5
+* Mockito 4
 
 Screenshots:
 ![Rejestracja](https://user-images.githubusercontent.com/24356805/196720924-8f0042d2-81c2-4d2e-9879-e432801e015d.png)

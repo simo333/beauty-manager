@@ -66,7 +66,7 @@ public class TreatmentCategoryServiceImpl implements TreatmentCategoryService {
         repository.deleteById(id);
     }
 
-    void checkNameAvailable(String name) {
+    private void checkNameAvailable(String name) {
         if (repository.existsByName(name)) {
             throw new NotAvailableException(String.format("Category with name %s already exists.", name));
         }

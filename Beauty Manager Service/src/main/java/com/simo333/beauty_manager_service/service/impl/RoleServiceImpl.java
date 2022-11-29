@@ -54,14 +54,6 @@ public class RoleServiceImpl implements RoleService {
 
     @Transactional
     @Override
-    public Role update(Role role) {
-        getRole(role.getId());
-        log.info("Updating role with id '{}'", role.getId());
-        return roleRepository.save(role);
-    }
-
-    @Transactional
-    @Override
     public void deleteById(long roleId) {
         log.info("Deleting role with id '{}'", roleId);
         roleRepository.deleteById(roleId);
