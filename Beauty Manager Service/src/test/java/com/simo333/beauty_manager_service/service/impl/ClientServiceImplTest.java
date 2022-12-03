@@ -89,18 +89,39 @@ class ClientServiceImplTest {
     }
 
     @Test
-    void update() {
+    void shouldReturnEmptyOptional_whenDeleted() {
+        // given
+        Client client = Client.builder()
+                .phoneNumber("+11123456789")
+                .firstName("name")
+                .lastName("lastName")
+                .build();
+
+        // when
+        clientRepository.save(client);
+        clientService.deleteById(client.getId());
+
+        // then
+        assertThat(clientRepository.findById(client.getId())).isEmpty();
+
     }
 
     @Test
-    void deleteById() {
+    void shouldReturnTrue() {
+        // given
+        Client client = Client.builder()
+                .phoneNumber("+11123456789")
+                .firstName("name")
+                .lastName("lastName")
+                .build();
+
+        // when
+        clientRepository.save(client);
+        boolean exists = clientService.existsById(client.getId());
+
+        // then
+        assertThat(exists).isTrue();
+
     }
 
-    @Test
-    void existsById() {
-    }
-
-    @Test
-    void exists() {
-    }
 }
