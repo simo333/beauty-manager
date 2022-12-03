@@ -40,7 +40,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void getUsersPage() {
+    void shouldReturnUsers() {
         // given
         User user = new User();
         Role roleUser = new Role(null, Role.Type.ROLE_USER);
@@ -65,7 +65,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void getUser() {
+    void shouldReturnUserByEmail() {
         // given
         String email = "mail@mail.com";
         User user = new User();
@@ -88,7 +88,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void testGetUser() {
+    void shouldReturnUserById() {
         // given
         User user = new User();
         Role roleUser = new Role(null, Role.Type.ROLE_USER);
@@ -110,7 +110,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void existsByEmail() {
+    void shouldReturnTrue() {
         // given
         String email = "mail@mail.com";
         User user = new User();
