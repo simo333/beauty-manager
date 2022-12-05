@@ -71,7 +71,7 @@ class ClientServiceImplTest {
     }
 
     @Test
-    void getOne() {
+    void shouldReturnClient() {
         // given
         Client client = Client.builder()
                 .phoneNumber("+11123456789")
